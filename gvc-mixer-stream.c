@@ -48,6 +48,7 @@ struct GvcMixerStreamPrivate
         char          *description;
         char          *application_id;
         char          *icon_name;
+        char          *form_factor;
         char          *sysfs_path;
         gboolean       is_muted;
         gboolean       can_decibel;
@@ -71,6 +72,7 @@ enum
         PROP_DESCRIPTION,
         PROP_APPLICATION_ID,
         PROP_ICON_NAME,
+        PROP_FORM_FACTOR,
         PROP_SYSFS_PATH,
         PROP_VOLUME,
         PROP_DECIBEL,
@@ -415,6 +417,13 @@ gvc_mixer_stream_get_icon_name (GvcMixerStream *stream)
 }
 
 const char *
+gvc_mixer_stream_get_form_factor (GvcMixerStream *stream)
+{
+        g_return_val_if_fail (GVC_IS_MIXER_STREAM (stream), NULL);
+        return stream->priv->form_factor;
+}
+
+const char *
 gvc_mixer_stream_get_sysfs_path (GvcMixerStream *stream)
 {
         g_return_val_if_fail (GVC_IS_MIXER_STREAM (stream), NULL);
@@ -445,6 +454,19 @@ gvc_mixer_stream_set_icon_name (GvcMixerStream *stream,
         g_free (stream->priv->icon_name);
         stream->priv->icon_name = g_strdup (icon_name);
         g_object_notify (G_OBJECT (stream), "icon-name");
+
+        return TRUE;
+}
+
+gboolean
+gvc_mixer_stream_set_form_factor (GvcMixerStream *stream,
+                                  const char     *form_factor)
+{
+        g_return_val_if_fail (GVC_IS_MIXER_STREAM (stream), FALSE);
+
+        g_free (stream->priv->form_factor);
+        stream->priv->form_factor = g_strdup (form_factor);
+        g_object_notify (G_OBJECT (stream), "form-factor");
 
         return TRUE;
 }
@@ -641,6 +663,9 @@ gvc_mixer_stream_set_property (GObject       *object,
         case PROP_ICON_NAME:
                 gvc_mixer_stream_set_icon_name (self, g_value_get_string (value));
                 break;
+        case PROP_FORM_FACTOR:
+                gvc_mixer_stream_set_form_factor (self, g_value_get_string (value));
+                break;
 	case PROP_SYSFS_PATH:
 		gvc_mixer_stream_set_sysfs_path (self, g_value_get_string (value));
 		break;
@@ -706,6 +731,9 @@ gvc_mixer_stream_get_property (GObject     *object,
                 break;
         case PROP_ICON_NAME:
                 g_value_set_string (value, self->priv->icon_name);
+                break;
+        case PROP_FORM_FACTOR:
+                g_value_set_string (value, self->priv->form_factor);
                 break;
 	case PROP_SYSFS_PATH:
 		g_value_set_string (value, self->priv->sysfs_path);
@@ -912,6 +940,13 @@ gvc_mixer_stream_class_init (GvcMixerStreamClass *klass)
                                                               NULL,
                                                               G_PARAM_READWRITE|G_PARAM_CONSTRUCT));
         g_object_class_install_property (gobject_class,
+                                         PROP_FORM_FACTOR,
+                                         g_param_spec_string ("form-factor",
+                                                              "Form Factor",
+                                                              "Device form factor for this stream, as reported by PulseAudio",
+                                                              NULL,
+                                                              G_PARAM_READWRITE|G_PARAM_CONSTRUCT));
+        g_object_class_install_property (gobject_class,
                                          PROP_SYSFS_PATH,
                                          g_param_spec_string ("sysfs-path",
                                                               "Sysfs path",
@@ -995,6 +1030,9 @@ gvc_mixer_stream_finalize (GObject *object)
 
         g_free (mixer_stream->priv->icon_name);
         mixer_stream->priv->icon_name = NULL;
+
+        g_free (mixer_stream->priv->form_factor);
+        mixer_stream->priv->form_factor = NULL;
 
         g_free (mixer_stream->priv->sysfs_path);
         mixer_stream->priv->sysfs_path = NULL;

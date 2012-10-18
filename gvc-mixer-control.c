@@ -1494,6 +1494,7 @@ update_sink (GvcMixerControl    *control,
         gvc_mixer_stream_set_card_index (stream, info->card);
         gvc_mixer_stream_set_description (stream, info->description);
         set_icon_name_from_proplist (stream, info->proplist, "audio-card");
+        gvc_mixer_stream_set_form_factor (stream, pa_proplist_gets (info->proplist, PA_PROP_DEVICE_FORM_FACTOR));
         gvc_mixer_stream_set_sysfs_path (stream, pa_proplist_gets (info->proplist, "sysfs.path"));
         gvc_mixer_stream_set_volume (stream, (guint)max_volume);
         gvc_mixer_stream_set_is_muted (stream, info->mute);
@@ -1620,6 +1621,7 @@ update_source (GvcMixerControl      *control,
         gvc_mixer_stream_set_card_index (stream, info->card);
         gvc_mixer_stream_set_description (stream, info->description);
         set_icon_name_from_proplist (stream, info->proplist, "audio-input-microphone");
+        gvc_mixer_stream_set_form_factor (stream, pa_proplist_gets (info->proplist, PA_PROP_DEVICE_FORM_FACTOR));
         gvc_mixer_stream_set_volume (stream, (guint)max_volume);
         gvc_mixer_stream_set_is_muted (stream, info->mute);
         gvc_mixer_stream_set_can_decibel (stream, !!(info->flags & PA_SOURCE_DECIBEL_VOLUME));
