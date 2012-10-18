@@ -1470,7 +1470,7 @@ update_sink (GvcMixerControl    *control,
                 for (i = 0; i < info->n_ports; i++) {
                         GvcMixerStreamPort *port;
 
-                        port = g_new0 (GvcMixerStreamPort, 1);
+                        port = g_slice_new0 (GvcMixerStreamPort);
                         port->port = g_strdup (info->ports[i]->name);
                         port->human_port = g_strdup (info->ports[i]->description);
                         port->priority = info->ports[i]->priority;
@@ -1598,7 +1598,7 @@ update_source (GvcMixerControl      *control,
                 for (i = 0; i < info->n_ports; i++) {
                         GvcMixerStreamPort *port;
 
-                        port = g_new0 (GvcMixerStreamPort, 1);
+                        port = g_slice_new0 (GvcMixerStreamPort);
                         port->port = g_strdup (info->ports[i]->name);
                         port->human_port = g_strdup (info->ports[i]->description);
                         port->priority = info->ports[i]->priority;

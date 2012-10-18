@@ -64,7 +64,8 @@ typedef struct
         gboolean available;
 } GvcMixerStreamPort;
 
-GType               gvc_mixer_stream_get_type        (void);
+GType               gvc_mixer_stream_port_get_type   (void) G_GNUC_CONST;
+GType               gvc_mixer_stream_get_type        (void) G_GNUC_CONST;
 
 guint               gvc_mixer_stream_get_index       (GvcMixerStream *stream);
 guint               gvc_mixer_stream_get_id          (GvcMixerStream *stream);

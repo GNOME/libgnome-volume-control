@@ -88,6 +88,30 @@ static void     gvc_mixer_stream_finalize   (GObject            *object);
 
 G_DEFINE_ABSTRACT_TYPE (GvcMixerStream, gvc_mixer_stream, G_TYPE_OBJECT)
 
+static void
+free_port (GvcMixerStreamPort *p)
+{
+        g_free (p->port);
+        g_free (p->human_port);
+        g_slice_free (GvcMixerStreamPort, p);
+}
+
+static GvcMixerStreamPort *
+dup_port (GvcMixerStreamPort *p)
+{
+        GvcMixerStreamPort *m;
+
+        m = g_slice_new (GvcMixerStreamPort);
+
+        *m = *p;
+        m->port = g_strdup (p->port);
+        m->human_port = g_strdup (p->human_port);
+
+        return m;
+}
+
+G_DEFINE_BOXED_TYPE (GvcMixerStreamPort, gvc_mixer_stream_port, dup_port, free_port)
+
 static guint32
 get_next_stream_serial (void)
 {
@@ -943,14 +967,6 @@ static void
 gvc_mixer_stream_init (GvcMixerStream *stream)
 {
         stream->priv = GVC_MIXER_STREAM_GET_PRIVATE (stream);
-}
-
-static void
-free_port (GvcMixerStreamPort *p)
-{
-        g_free (p->port);
-        g_free (p->human_port);
-        g_free (p);
 }
 
 static void
