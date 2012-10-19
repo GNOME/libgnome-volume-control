@@ -124,7 +124,7 @@ void                    gvc_mixer_control_change_output                     (Gvc
 void                    gvc_mixer_control_change_input                      (GvcMixerControl *control,
                                                                              GvcMixerUIDevice* input);
 GvcMixerStream*         gvc_mixer_control_get_stream_from_device            (GvcMixerControl *control,
-                                                                             GvcMixerUIDevice *dev);
+                                                                             GvcMixerUIDevice *device);
 gboolean                gvc_mixer_control_change_profile_on_selected_device (GvcMixerControl *control,
                                                                              GvcMixerUIDevice *device,
                                                                              const gchar* profile);

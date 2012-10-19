@@ -22,6 +22,7 @@
 #define __GVC_CHANNEL_BAR_H
 
 #include <glib-object.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

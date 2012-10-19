@@ -132,7 +132,6 @@ gvc_mixer_stream_get_channel_map (GvcMixerStream *stream)
 
 /**
  * gvc_mixer_stream_get_volume:
- *
  * @stream:
  *
  * Returns: (type guint32) (transfer none):
@@ -156,7 +155,6 @@ gvc_mixer_stream_get_decibel (GvcMixerStream *stream)
 
 /**
  * gvc_mixer_stream_set_volume:
- *
  * @stream:
  * @volume: (type guint32):
  *
@@ -442,7 +440,6 @@ gvc_mixer_stream_set_sysfs_path (GvcMixerStream *stream,
 
 /**
  * gvc_mixer_stream_get_base_volume:
- *
  * @stream:
  *
  * Returns: (type guint32) (transfer none):
@@ -457,7 +454,6 @@ gvc_mixer_stream_get_base_volume (GvcMixerStream *stream)
 
 /**
  * gvc_mixer_stream_set_base_volume:
- *
  * @stream:
  * @base_volume: (type guint32):
  *

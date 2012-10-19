@@ -50,7 +50,7 @@ GType               gvc_mixer_sink_input_get_type      (void);
 
 GvcMixerStream *    gvc_mixer_sink_input_new           (pa_context    *context,
                                                         guint          index,
-                                                        GvcChannelMap *map);
+                                                        GvcChannelMap *channel_map);
 
 G_END_DECLS
 

@@ -53,29 +53,29 @@ typedef enum
 
 GType gvc_mixer_ui_device_get_type (void) G_GNUC_CONST;
 
-guint          gvc_mixer_ui_device_get_id                      (GvcMixerUIDevice *dev);
-gint           gvc_mixer_ui_device_get_stream_id               (GvcMixerUIDevice *dev);
-const gchar *  gvc_mixer_ui_device_get_description             (GvcMixerUIDevice *dev);
-const gchar *  gvc_mixer_ui_device_get_origin                  (GvcMixerUIDevice *dev);
-const gchar *  gvc_mixer_ui_device_get_port                    (GvcMixerUIDevice *dev);
-const gchar *  gvc_mixer_ui_device_get_best_profile            (GvcMixerUIDevice *dev,
+guint          gvc_mixer_ui_device_get_id                      (GvcMixerUIDevice *device);
+gint           gvc_mixer_ui_device_get_stream_id               (GvcMixerUIDevice *device);
+const gchar *  gvc_mixer_ui_device_get_description             (GvcMixerUIDevice *device);
+const gchar *  gvc_mixer_ui_device_get_origin                  (GvcMixerUIDevice *device);
+const gchar *  gvc_mixer_ui_device_get_port                    (GvcMixerUIDevice *device);
+const gchar *  gvc_mixer_ui_device_get_best_profile            (GvcMixerUIDevice *device,
                                                                 const gchar      *selected,
                                                                 const gchar      *current);
 const gchar *  gvc_mixer_ui_device_get_active_profile          (GvcMixerUIDevice* device);
-const gchar *  gvc_mixer_ui_device_get_matching_profile        (GvcMixerUIDevice *dev,
+const gchar *  gvc_mixer_ui_device_get_matching_profile        (GvcMixerUIDevice *device,
                                                                 const gchar      *profile);
-const gchar *  gvc_mixer_ui_device_get_user_preferred_profile  (GvcMixerUIDevice *dev);
-const gchar *  gvc_mixer_ui_device_get_top_priority_profile    (GvcMixerUIDevice *dev);
-GList *        gvc_mixer_ui_device_get_profiles                (GvcMixerUIDevice *dev);
+const gchar *  gvc_mixer_ui_device_get_user_preferred_profile  (GvcMixerUIDevice *device);
+const gchar *  gvc_mixer_ui_device_get_top_priority_profile    (GvcMixerUIDevice *device);
+GList *        gvc_mixer_ui_device_get_profiles                (GvcMixerUIDevice *device);
 GList *        gvc_mixer_ui_device_get_supported_profiles      (GvcMixerUIDevice *device);
 gboolean       gvc_mixer_ui_device_should_profiles_be_hidden   (GvcMixerUIDevice *device);
 void           gvc_mixer_ui_device_set_profiles                (GvcMixerUIDevice *device,
-                                                                const GList      *profiles);
+                                                                const GList      *in_profiles);
 void           gvc_mixer_ui_device_set_user_preferred_profile  (GvcMixerUIDevice *device,
                                                                 const gchar      *profile);
-void           gvc_mixer_ui_device_invalidate_stream           (GvcMixerUIDevice *dev);
-gboolean       gvc_mixer_ui_device_has_ports                   (GvcMixerUIDevice *dev);
-gboolean       gvc_mixer_ui_device_is_output                   (GvcMixerUIDevice *dev);
+void           gvc_mixer_ui_device_invalidate_stream           (GvcMixerUIDevice *device);
+gboolean       gvc_mixer_ui_device_has_ports                   (GvcMixerUIDevice *device);
+gboolean       gvc_mixer_ui_device_is_output                   (GvcMixerUIDevice *device);
 
 G_END_DECLS
 

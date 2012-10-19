@@ -369,6 +369,12 @@ gvc_channel_bar_set_adjustment (GvcChannelBar *bar,
         g_object_notify (G_OBJECT (bar), "adjustment");
 }
 
+/**
+ * gvc_channel_bar_get_adjustment:
+ * @bar:
+ *
+ * Returns: (transfer none):
+ */
 GtkAdjustment *
 gvc_channel_bar_get_adjustment (GvcChannelBar *bar)
 {

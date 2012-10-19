@@ -148,7 +148,6 @@ gvc_mixer_card_set_icon_name (GvcMixerCard *card,
 
 /**
  * gvc_mixer_card_get_profile: (skip)
- *
  * @card:
  *
  * Returns:
@@ -325,10 +324,9 @@ gvc_mixer_card_set_profiles (GvcMixerCard *card,
 
 /**
  * gvc_mixer_card_get_gicon:
- *
  * @card:
  *
- * Return value: (transfer full) (element-type GIcon):
+ * Return value: (transfer full):
  */
 GIcon *
 gvc_mixer_card_get_gicon (GvcMixerCard *card)
@@ -343,11 +341,11 @@ gvc_mixer_card_get_gicon (GvcMixerCard *card)
 
 /**
  * gvc_mixer_card_set_ports:
- * @profiles: (transfer full) (element-type GvcMixerCardPort):
+ * @ports: (transfer full) (element-type GvcMixerCardPort):
  */
 gboolean
 gvc_mixer_card_set_ports (GvcMixerCard *card,
-                          GList          *ports)
+                          GList        *ports)
 {
         g_return_val_if_fail (GVC_IS_MIXER_CARD (card), FALSE);
         g_return_val_if_fail (card->priv->ports == NULL, FALSE);

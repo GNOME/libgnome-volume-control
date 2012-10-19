@@ -134,7 +134,6 @@ gvc_mixer_control_get_pa_context (GvcMixerControl *control)
 
 /**
  * gvc_mixer_control_get_event_sink_input:
- *
  * @control:
  *
  * Returns: (transfer none):
@@ -215,6 +214,7 @@ gvc_mixer_control_stream_restore_source_cb (pa_context *c,
  * gvc_mixer_control_lookup_device_from_stream:
  * @control:
  * @stream:
+ *
  * Returns: (transfer none): a #GvcUIDevice or %NULL
  */
 GvcMixerUIDevice *
@@ -364,7 +364,6 @@ gvc_mixer_control_set_default_source (GvcMixerControl *control,
 
 /**
  * gvc_mixer_control_get_default_sink:
- *
  * @control:
  *
  * Returns: (transfer none):
@@ -388,7 +387,6 @@ gvc_mixer_control_get_default_sink (GvcMixerControl *control)
 
 /**
  * gvc_mixer_control_get_default_source:
- *
  * @control:
  *
  * Returns: (transfer none):
@@ -420,7 +418,6 @@ gvc_mixer_control_lookup_id (GHashTable *hash_table,
 
 /**
  * gvc_mixer_control_lookup_stream_id:
- *
  * @control:
  * @id:
  *
@@ -437,7 +434,6 @@ gvc_mixer_control_lookup_stream_id (GvcMixerControl *control,
 
 /**
  * gvc_mixer_control_lookup_card_id:
- *
  * @control:
  * @id:
  *
@@ -456,6 +452,7 @@ gvc_mixer_control_lookup_card_id (GvcMixerControl *control,
  * gvc_mixer_control_lookup_output_id:
  * @control:
  * @id:
+ *
  * Returns: (transfer none):
  */
 GvcMixerUIDevice *
@@ -471,6 +468,7 @@ gvc_mixer_control_lookup_output_id (GvcMixerControl *control,
  * gvc_mixer_control_lookup_input_id:
  * @control:
  * @id:
+ *
  * Returns: (transfer none):
  */
 GvcMixerUIDevice *
@@ -486,6 +484,7 @@ gvc_mixer_control_lookup_input_id (GvcMixerControl *control,
  * gvc_mixer_control_get_stream_from_device:
  * @control:
  * @device:
+ *
  * Returns: (transfer none):
  */
 GvcMixerStream *
@@ -511,6 +510,7 @@ gvc_mixer_control_get_stream_from_device (GvcMixerControl *control,
  * @control:
  * @device:
  * @profile: Can be null if any profile present on this port is okay
+ *
  * Returns: This method will attempt to swap the profile on the card of
  * the device with given profile name.  If successfull it will set the
  * preferred profile on that device so as we know the next time the user
@@ -749,7 +749,6 @@ gvc_card_collate (GvcMixerCard *a,
 
 /**
  * gvc_mixer_control_get_cards:
- *
  * @control:
  *
  * Returns: (transfer container) (element-type Gvc.MixerCard):
@@ -786,7 +785,6 @@ gvc_stream_collate (GvcMixerStream *a,
 
 /**
  * gvc_mixer_control_get_streams:
- *
  * @control:
  *
  * Returns: (transfer container) (element-type Gvc.MixerStream):
@@ -807,7 +805,6 @@ gvc_mixer_control_get_streams (GvcMixerControl *control)
 
 /**
  * gvc_mixer_control_get_sinks:
- *
  * @control:
  *
  * Returns: (transfer container) (element-type Gvc.MixerSink):
@@ -828,7 +825,6 @@ gvc_mixer_control_get_sinks (GvcMixerControl *control)
 
 /**
  * gvc_mixer_control_get_sources:
- *
  * @control:
  *
  * Returns: (transfer container) (element-type Gvc.MixerSource):
@@ -849,7 +845,6 @@ gvc_mixer_control_get_sources (GvcMixerControl *control)
 
 /**
  * gvc_mixer_control_get_sink_inputs:
- *
  * @control:
  *
  * Returns: (transfer container) (element-type Gvc.MixerSinkInput):
@@ -870,7 +865,6 @@ gvc_mixer_control_get_sink_inputs (GvcMixerControl *control)
 
 /**
  * gvc_mixer_control_get_source_outputs:
- *
  * @control:
  *
  * Returns: (transfer container) (element-type Gvc.MixerSourceOutput):
@@ -1863,7 +1857,7 @@ card_num_streams_to_status (guint sinks,
         return ret;
 }
 
-/**
+/*
  * A utility method to gather which card profiles are relevant to the port .
  */
 static GList *
