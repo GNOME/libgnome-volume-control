@@ -31,8 +31,6 @@ libgvc_la_gir_sources = 			\
 	gvc-mixer-event-role.c			\
 	gvc-mixer-control.h			\
 	gvc-mixer-control.c			\
-	gvc-channel-bar.h			\
-	gvc-channel-bar.c			\
 	$(NULL)
 
 libgvc_la_SOURCES =				\
@@ -52,7 +50,7 @@ if HAVE_INTROSPECTION
 include $(INTROSPECTION_MAKEFILE)
 
 Gvc-1.0.gir: libgvc.la
-Gvc_1_0_gir_INCLUDES = GObject-2.0 Gio-2.0 Gtk-3.0
+Gvc_1_0_gir_INCLUDES = GObject-2.0 Gio-2.0
 Gvc_1_0_gir_CFLAGS = $(INCLUDES) -I$(srcdir)/gvc -DWITH_INTROSPECTION
 Gvc_1_0_gir_LIBS = libgvc.la
 Gvc_1_0_gir_FILES = $(addprefix $(srcdir)/,$(libgvc_la_gir_sources))
