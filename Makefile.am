@@ -6,7 +6,7 @@ INTROSPECTION_SCANNER_ARGS = --warn-all
 libgvc_la_CPPFLAGS =			\
 	$(WARN_CFLAGS)			\
 	$(GVC_CFLAGS)			\
-	-I$(srcdir)/gvc/		\
+	-I$(srcdir)			\
 	-DWITH_INTROSPECTION		\
 	-DG_LOG_DOMAIN="\"Gvc\""
 
