@@ -51,7 +51,7 @@ include $(INTROSPECTION_MAKEFILE)
 
 Gvc-1.0.gir: libgvc.la
 Gvc_1_0_gir_INCLUDES = GObject-2.0 Gio-2.0
-Gvc_1_0_gir_CFLAGS = $(INCLUDES) -I$(srcdir)/gvc -DWITH_INTROSPECTION
+Gvc_1_0_gir_CFLAGS = $(INCLUDES) -I$(srcdir) -DWITH_INTROSPECTION
 Gvc_1_0_gir_LIBS = libgvc.la
 Gvc_1_0_gir_FILES = $(addprefix $(srcdir)/,$(libgvc_la_gir_sources))
 INTROSPECTION_GIRS = Gvc-1.0.gir
