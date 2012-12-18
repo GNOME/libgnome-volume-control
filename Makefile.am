@@ -55,9 +55,10 @@ Gvc_1_0_gir_CFLAGS = $(INCLUDES) -I$(srcdir) -DWITH_INTROSPECTION
 Gvc_1_0_gir_LIBS = libgvc.la
 Gvc_1_0_gir_FILES = $(addprefix $(srcdir)/,$(libgvc_la_gir_sources))
 INTROSPECTION_GIRS = Gvc-1.0.gir
-CLEANFILES = Gvc-1.0.gir
 
 typelibdir = $(pkglibdir)
 typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+
+CLEANFILES = Gvc-1.0.gir $(typelib_DATA)
 
 endif
