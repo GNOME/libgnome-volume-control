@@ -389,6 +389,11 @@ add_canonical_names_of_profiles (GvcMixerUIDevice *device,
 
                 g_free (canonical_name);
 
+                /* https://bugzilla.gnome.org/show_bug.cgi?id=693654
+                 * Don't add a profile that will make the UI device completely disappear */
+                if (p->n_sinks == 0 && p->n_sources == 0)
+                        continue;
+
                 g_debug ("Adding profile to combobox: '%s' - '%s'", p->profile, p->human_profile);
                 g_hash_table_insert (added_profiles, g_strdup (p->profile), p);
                 device->priv->profiles = g_list_append (device->priv->profiles, p);
