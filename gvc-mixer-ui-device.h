@@ -20,6 +20,7 @@
 #define _GVC_MIXER_UI_DEVICE_H_
 
 #include <glib-object.h>
+#include <gio/gio.h>
 
 G_BEGIN_DECLS
 
@@ -56,6 +57,8 @@ GType gvc_mixer_ui_device_get_type (void) G_GNUC_CONST;
 guint          gvc_mixer_ui_device_get_id                      (GvcMixerUIDevice *device);
 gint           gvc_mixer_ui_device_get_stream_id               (GvcMixerUIDevice *device);
 const gchar *  gvc_mixer_ui_device_get_description             (GvcMixerUIDevice *device);
+const gchar *  gvc_mixer_ui_device_get_icon_name               (GvcMixerUIDevice *device);
+GIcon *        gvc_mixer_ui_device_get_gicon                   (GvcMixerUIDevice *device);
 const gchar *  gvc_mixer_ui_device_get_origin                  (GvcMixerUIDevice *device);
 const gchar *  gvc_mixer_ui_device_get_port                    (GvcMixerUIDevice *device);
 const gchar *  gvc_mixer_ui_device_get_best_profile            (GvcMixerUIDevice *device,

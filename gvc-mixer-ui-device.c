@@ -32,6 +32,7 @@ struct GvcMixerUIDevicePrivate
 
         GvcMixerCard               *card;
         gchar                      *port_name;
+        char                       *icon_name; 
         gint                        stream_id;
         guint                       id;
         gboolean                    port_available;
@@ -55,11 +56,15 @@ enum
         PROP_STREAM_ID,
         PROP_UI_DEVICE_TYPE,
         PROP_PORT_AVAILABLE,
+        PROP_ICON_NAME,
 };
 
 static void     gvc_mixer_ui_device_class_init (GvcMixerUIDeviceClass *klass);
 static void     gvc_mixer_ui_device_init       (GvcMixerUIDevice      *device);
 static void     gvc_mixer_ui_device_finalize   (GObject               *object);
+
+static void     gvc_mixer_ui_device_set_icon_name (GvcMixerUIDevice *device,
+                                                   const char       *icon_name);
 
 G_DEFINE_TYPE (GvcMixerUIDevice, gvc_mixer_ui_device, G_TYPE_OBJECT);
 
@@ -106,6 +111,9 @@ gvc_mixer_ui_device_get_property  (GObject       *object,
                 break;
         case PROP_PORT_AVAILABLE:
                 g_value_set_boolean (value, self->priv->port_available);
+                break;
+        case PROP_ICON_NAME:
+                g_value_set_string (value, gvc_mixer_ui_device_get_icon_name (self));
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -158,6 +166,9 @@ gvc_mixer_ui_device_set_property  (GObject      *object,
                 g_debug ("gvc-mixer-output-set-property - port available %i, value passed in %i \n",
                          self->priv->port_available, g_value_get_boolean (value));
                 break;
+        case PROP_ICON_NAME:
+                gvc_mixer_ui_device_set_icon_name (self, g_value_get_string (value));
+                break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
                 break;
@@ -197,6 +208,7 @@ gvc_mixer_ui_device_dispose (GObject *object)
         device = GVC_MIXER_UI_DEVICE (object);
 
         g_clear_pointer (&device->priv->port_name, g_free);
+        g_clear_pointer (&device->priv->icon_name, g_free);
         g_clear_pointer (&device->priv->first_line_desc, g_free);
         g_clear_pointer (&device->priv->second_line_desc, g_free);
         g_clear_pointer (&device->priv->profiles, g_list_free);
@@ -273,6 +285,13 @@ gvc_mixer_ui_device_class_init (GvcMixerUIDeviceClass *klass)
                                       FALSE,
                                       G_PARAM_READWRITE);
         g_object_class_install_property (object_class, PROP_PORT_AVAILABLE, pspec);
+
+        pspec = g_param_spec_string ("icon-name",
+                                     "Icon Name",
+                                     "Name of icon to display for this card",
+                                     NULL,
+                                     G_PARAM_READWRITE|G_PARAM_CONSTRUCT);
+        g_object_class_install_property (object_class, PROP_ICON_NAME, pspec);
 
         g_type_class_add_private (klass, sizeof (GvcMixerUIDevicePrivate));
 }
@@ -599,6 +618,51 @@ gvc_mixer_ui_device_get_description (GvcMixerUIDevice *device)
         g_return_val_if_fail (GVC_IS_MIXER_UI_DEVICE (device), NULL);
 
         return device->priv->first_line_desc;
+}
+
+const char *
+gvc_mixer_ui_device_get_icon_name (GvcMixerUIDevice *device)
+{
+        g_return_val_if_fail (GVC_IS_MIXER_UI_DEVICE (device), NULL);
+
+        if (device->priv->icon_name)
+                return device->priv->icon_name;
+
+        if (device->priv->card)
+                return gvc_mixer_card_get_icon_name (device->priv->card);
+
+        return NULL;
+}
+
+static void
+gvc_mixer_ui_device_set_icon_name (GvcMixerUIDevice *device,
+                                   const char       *icon_name)
+{
+        g_return_if_fail (GVC_IS_MIXER_UI_DEVICE (device));
+
+        g_free (device->priv->icon_name);
+        device->priv->icon_name = g_strdup (icon_name);
+        g_object_notify (G_OBJECT (device), "icon-name");
+}
+
+
+/**
+ * gvc_mixer_ui_device_get_gicon:
+ * @device:
+ *
+ * Returns: (transfer full):
+ */
+GIcon *
+gvc_mixer_ui_device_get_gicon (GvcMixerUIDevice *device)
+{
+        const char *icon_name;
+
+        icon_name = gvc_mixer_ui_device_get_icon_name (device);
+
+        if (icon_name != NULL)
+                return g_themed_icon_new_with_default_fallbacks (icon_name);
+        else
+                return NULL;
 }
 
 const gchar *

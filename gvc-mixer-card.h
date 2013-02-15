@@ -62,6 +62,7 @@ typedef struct
 {
         char  *port;
         char  *human_port;
+        char  *icon_name;
         guint  priority;
         gint   available;
         gint   direction;

@@ -1911,6 +1911,7 @@ create_ui_device_from_port (GvcMixerControl* control,
                                "description", port->human_port,
                                "origin", gvc_mixer_card_get_name (card),
                                "port-available", available,
+                               "icon-name", port->icon_name,
                                NULL);
 
         uidevice = GVC_MIXER_UI_DEVICE (object);
@@ -2102,6 +2103,7 @@ update_card (GvcMixerControl      *control,
                         port->priority = info->ports[i]->priority;
                         port->available = info->ports[i]->available;
                         port->direction = info->ports[i]->direction;
+                        port->icon_name = g_strdup (pa_proplist_gets (info->ports[i]->proplist, "device.icon_name"));
                         port->profiles = determine_profiles_for_port (info->ports[i], profile_list);
                         port_list = g_list_prepend (port_list, port);
                 }

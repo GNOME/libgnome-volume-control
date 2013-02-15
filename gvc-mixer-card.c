@@ -276,7 +276,6 @@ gvc_mixer_card_get_profiles (GvcMixerCard *card)
         return card->priv->profiles;
 }
 
-
 /**
  * gvc_mixer_card_get_ports:
  *
@@ -339,6 +338,17 @@ gvc_mixer_card_get_gicon (GvcMixerCard *card)
         return g_themed_icon_new_with_default_fallbacks (card->priv->icon_name);
 }
 
+static void
+free_port (GvcMixerCardPort *port)
+{
+        g_free (port->port);
+        g_free (port->human_port);
+        g_free (port->icon_name);
+        g_list_free (port->profiles);
+
+        g_free (port);
+}
+
 /**
  * gvc_mixer_card_set_ports:
  * @ports: (transfer full) (element-type GvcMixerCardPort):
@@ -350,6 +360,7 @@ gvc_mixer_card_set_ports (GvcMixerCard *card,
         g_return_val_if_fail (GVC_IS_MIXER_CARD (card), FALSE);
         g_return_val_if_fail (card->priv->ports == NULL, FALSE);
 
+        g_list_free_full (card->priv->ports, (GDestroyNotify) free_port);
         card->priv->ports = ports;
 
         return TRUE;
@@ -562,6 +573,9 @@ gvc_mixer_card_finalize (GObject *object)
         g_list_foreach (mixer_card->priv->profiles, (GFunc) free_profile, NULL);
         g_list_free (mixer_card->priv->profiles);
         mixer_card->priv->profiles = NULL;
+
+        g_list_free_full (mixer_card->priv->ports, (GDestroyNotify) free_port);
+        mixer_card->priv->ports = NULL;
 
         G_OBJECT_CLASS (gvc_mixer_card_parent_class)->finalize (object);
 }
