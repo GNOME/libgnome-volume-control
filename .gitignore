@@ -4,5 +4,6 @@ Makefile.in
 Makefile
 *.la
 *.lo
+*.o
 *.gir
 *.typelib
