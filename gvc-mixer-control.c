@@ -1905,7 +1905,7 @@ create_ui_device_from_port (GvcMixerControl* control,
         direction = (is_card_port_an_output (port) == TRUE) ? UIDeviceOutput : UIDeviceInput;
 
         object = g_object_new (GVC_TYPE_MIXER_UI_DEVICE,
-                               "type", (uint)direction,
+                               "type", (guint)direction,
                                "card", card,
                                "port-name", port->port,
                                "description", port->human_port,
