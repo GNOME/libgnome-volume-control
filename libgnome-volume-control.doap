@@ -4,7 +4,7 @@
          xmlns:gnome="http://api.gnome.org/doap-extensions#"
          xmlns="http://usefulinc.com/ns/doap#">
 
-  <name xml:lang="en">Gnome Volume Control</name>
+  <name xml:lang="en">libgnome-volume-control</name>
   <shortdesc xml:lang="en">GObject layer for PulseAudio</shortdesc>
   <description>
     This library contains code to access PulseAudio using a GObject
