@@ -104,6 +104,7 @@ enum {
         STATE_CHANGED,
         STREAM_ADDED,
         STREAM_REMOVED,
+        STREAM_CHANGED,
         CARD_ADDED,
         CARD_REMOVED,
         DEFAULT_SINK_CHANGED,
@@ -1526,6 +1527,11 @@ update_sink (GvcMixerControl    *control,
                 /* Always sink on a new stream to able to assign the right stream id
                  * to the appropriate outputs (multiple potential outputs per stream). */
                 sync_devices (control, stream);
+        } else {
+                g_signal_emit (G_OBJECT (control),
+                               signals[STREAM_CHANGED],
+                               0,
+                               gvc_mixer_stream_get_id (stream));
         }
 
         /*
@@ -1646,6 +1652,11 @@ update_source (GvcMixerControl      *control,
                                      g_object_ref (stream));
                 add_stream (control, stream);
                 sync_devices (control, stream);
+        } else {
+                g_signal_emit (G_OBJECT (control),
+                               signals[STREAM_CHANGED],
+                               0,
+                               gvc_mixer_stream_get_id (stream));
         }
 
         if (control->priv->profile_swapping_device_id != GVC_MIXER_UI_DEVICE_INVALID) {
@@ -1751,6 +1762,11 @@ update_sink_input (GvcMixerControl          *control,
                                      GUINT_TO_POINTER (info->index),
                                      g_object_ref (stream));
                 add_stream (control, stream);
+        } else {
+                g_signal_emit (G_OBJECT (control),
+                               signals[STREAM_CHANGED],
+                               0,
+                               gvc_mixer_stream_get_id (stream));
         }
 }
 
@@ -1797,6 +1813,11 @@ update_source_output (GvcMixerControl             *control,
                                      GUINT_TO_POINTER (info->index),
                                      g_object_ref (stream));
                 add_stream (control, stream);
+        } else {
+                g_signal_emit (G_OBJECT (control),
+                               signals[STREAM_CHANGED],
+                               0,
+                               gvc_mixer_stream_get_id (stream));
         }
 }
 
@@ -3205,6 +3226,14 @@ gvc_mixer_control_class_init (GvcMixerControlClass *klass)
                               G_TYPE_FROM_CLASS (klass),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GvcMixerControlClass, stream_removed),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__UINT,
+                              G_TYPE_NONE, 1, G_TYPE_UINT);
+        signals [STREAM_CHANGED] =
+                g_signal_new ("stream-changed",
+                              G_TYPE_FROM_CLASS (klass),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (GvcMixerControlClass, stream_changed),
                               NULL, NULL,
                               g_cclosure_marshal_VOID__UINT,
                               G_TYPE_NONE, 1, G_TYPE_UINT);

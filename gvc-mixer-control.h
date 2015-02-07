@@ -59,6 +59,8 @@ typedef struct
                                         GvcMixerControlState  new_state);
         void (*stream_added)           (GvcMixerControl *control,
                                         guint            id);
+        void (*stream_changed)         (GvcMixerControl *control,
+                                        guint            id);
         void (*stream_removed)         (GvcMixerControl *control,
                                         guint            id);
         void (*card_added)             (GvcMixerControl *control,
