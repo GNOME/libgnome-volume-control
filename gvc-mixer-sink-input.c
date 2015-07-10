@@ -40,8 +40,6 @@ struct GvcMixerSinkInputPrivate
         gpointer dummy;
 };
 
-static void     gvc_mixer_sink_input_class_init (GvcMixerSinkInputClass *klass);
-static void     gvc_mixer_sink_input_init       (GvcMixerSinkInput      *mixer_sink_input);
 static void     gvc_mixer_sink_input_finalize   (GObject                *object);
 
 G_DEFINE_TYPE (GvcMixerSinkInput, gvc_mixer_sink_input, GVC_TYPE_MIXER_STREAM)

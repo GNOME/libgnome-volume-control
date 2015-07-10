@@ -38,8 +38,6 @@ struct GvcMixerSourceOutputPrivate
         gpointer dummy;
 };
 
-static void     gvc_mixer_source_output_class_init (GvcMixerSourceOutputClass *klass);
-static void     gvc_mixer_source_output_init       (GvcMixerSourceOutput      *mixer_source_output);
 static void     gvc_mixer_source_output_finalize   (GObject            *object);
 
 G_DEFINE_TYPE (GvcMixerSourceOutput, gvc_mixer_source_output, GVC_TYPE_MIXER_STREAM)

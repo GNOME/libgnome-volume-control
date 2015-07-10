@@ -59,8 +59,6 @@ enum
         PROP_ICON_NAME,
 };
 
-static void     gvc_mixer_ui_device_class_init (GvcMixerUIDeviceClass *klass);
-static void     gvc_mixer_ui_device_init       (GvcMixerUIDevice      *device);
 static void     gvc_mixer_ui_device_finalize   (GObject               *object);
 
 static void     gvc_mixer_ui_device_set_icon_name (GvcMixerUIDevice *device,

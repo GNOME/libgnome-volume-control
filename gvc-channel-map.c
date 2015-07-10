@@ -51,8 +51,6 @@ enum {
 
 static guint signals [LAST_SIGNAL] = { 0, };
 
-static void     gvc_channel_map_class_init (GvcChannelMapClass *klass);
-static void     gvc_channel_map_init       (GvcChannelMap      *channel_map);
 static void     gvc_channel_map_finalize   (GObject            *object);
 
 G_DEFINE_TYPE (GvcChannelMap, gvc_channel_map, G_TYPE_OBJECT)

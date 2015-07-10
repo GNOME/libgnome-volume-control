@@ -119,8 +119,6 @@ enum {
 
 static guint signals [LAST_SIGNAL] = { 0, };
 
-static void     gvc_mixer_control_class_init (GvcMixerControlClass *klass);
-static void     gvc_mixer_control_init       (GvcMixerControl      *mixer_control);
 static void     gvc_mixer_control_finalize   (GObject              *object);
 
 G_DEFINE_TYPE (GvcMixerControl, gvc_mixer_control, G_TYPE_OBJECT)

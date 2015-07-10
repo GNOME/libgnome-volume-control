@@ -47,8 +47,6 @@ enum
         PROP_DEVICE
 };
 
-static void     gvc_mixer_event_role_class_init (GvcMixerEventRoleClass *klass);
-static void     gvc_mixer_event_role_init       (GvcMixerEventRole      *mixer_event_role);
 static void     gvc_mixer_event_role_finalize   (GObject            *object);
 
 G_DEFINE_TYPE (GvcMixerEventRole, gvc_mixer_event_role, GVC_TYPE_MIXER_STREAM)

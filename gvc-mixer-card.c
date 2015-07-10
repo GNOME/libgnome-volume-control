@@ -65,8 +65,6 @@ enum
         PROP_HUMAN_PROFILE,
 };
 
-static void     gvc_mixer_card_class_init (GvcMixerCardClass *klass);
-static void     gvc_mixer_card_init       (GvcMixerCard      *mixer_card);
 static void     gvc_mixer_card_finalize   (GObject            *object);
 
 G_DEFINE_TYPE (GvcMixerCard, gvc_mixer_card, G_TYPE_OBJECT)

@@ -84,8 +84,6 @@ enum
         PROP_PORT,
 };
 
-static void     gvc_mixer_stream_class_init (GvcMixerStreamClass *klass);
-static void     gvc_mixer_stream_init       (GvcMixerStream      *mixer_stream);
 static void     gvc_mixer_stream_finalize   (GObject            *object);
 
 G_DEFINE_ABSTRACT_TYPE (GvcMixerStream, gvc_mixer_stream, G_TYPE_OBJECT)
