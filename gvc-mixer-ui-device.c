@@ -33,7 +33,7 @@ struct GvcMixerUIDevicePrivate
         GvcMixerCard               *card;
         gchar                      *port_name;
         char                       *icon_name; 
-        gint                        stream_id;
+        guint                       stream_id;
         guint                       id;
         gboolean                    port_available;
 
@@ -102,7 +102,7 @@ gvc_mixer_ui_device_get_property  (GObject       *object,
                 g_value_set_string (value, self->priv->port_name);
                 break;
         case PROP_STREAM_ID:
-                g_value_set_int (value, self->priv->stream_id);
+                g_value_set_uint (value, self->priv->stream_id);
                 break;
         case PROP_UI_DEVICE_TYPE:
                 g_value_set_uint (value, (guint)self->priv->type);
@@ -152,7 +152,7 @@ gvc_mixer_ui_device_set_property  (GObject      *object,
                          self->priv->port_name);
                 break;
         case PROP_STREAM_ID:
-                self->priv->stream_id = g_value_get_int (value);
+                self->priv->stream_id = g_value_get_uint (value);
                 g_debug ("gvc-mixer-output-set-property - sink/source id: %i\n",
                          self->priv->stream_id);
                 break;
@@ -262,11 +262,11 @@ gvc_mixer_ui_device_class_init (GvcMixerUIDeviceClass *klass)
                                      G_PARAM_READWRITE);
         g_object_class_install_property (object_class, PROP_PORT_NAME, pspec);
 
-        pspec = g_param_spec_int ("stream-id",
-                                  "stream id assigned by gvc-stream",
-                                  "Set/Get stream id",
-                                  -1,
-                                   G_MAXINT,
+        pspec = g_param_spec_uint ("stream-id",
+                                   "stream id assigned by gvc-stream",
+                                   "Set/Get stream id",
+                                   0,
+                                   G_MAXUINT,
                                    GVC_MIXER_UI_DEVICE_INVALID,
                                    G_PARAM_READWRITE);
         g_object_class_install_property (object_class, PROP_STREAM_ID, pspec);
@@ -600,7 +600,7 @@ gvc_mixer_ui_device_get_id (GvcMixerUIDevice *device)
         return device->priv->id;
 }
 
-gint
+guint
 gvc_mixer_ui_device_get_stream_id (GvcMixerUIDevice *device)
 {
         g_return_val_if_fail (GVC_IS_MIXER_UI_DEVICE (device), 0);

@@ -31,7 +31,7 @@ G_BEGIN_DECLS
 #define GVC_IS_MIXER_UI_DEVICE_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), GVC_TYPE_MIXER_UI_DEVICE))
 #define GVC_MIXER_UI_DEVICE_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), GVC_TYPE_MIXER_UI_DEVICE, GvcMixerUIDeviceClass))
 
-#define GVC_MIXER_UI_DEVICE_INVALID          -1
+#define GVC_MIXER_UI_DEVICE_INVALID          0
 
 typedef struct GvcMixerUIDevicePrivate GvcMixerUIDevicePrivate;
 
@@ -55,7 +55,7 @@ typedef enum
 GType gvc_mixer_ui_device_get_type (void) G_GNUC_CONST;
 
 guint          gvc_mixer_ui_device_get_id                      (GvcMixerUIDevice *device);
-gint           gvc_mixer_ui_device_get_stream_id               (GvcMixerUIDevice *device);
+guint          gvc_mixer_ui_device_get_stream_id               (GvcMixerUIDevice *device);
 const gchar *  gvc_mixer_ui_device_get_description             (GvcMixerUIDevice *device);
 const gchar *  gvc_mixer_ui_device_get_icon_name               (GvcMixerUIDevice *device);
 GIcon *        gvc_mixer_ui_device_get_gicon                   (GvcMixerUIDevice *device);
