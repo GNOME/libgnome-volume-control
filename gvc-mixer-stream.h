@@ -94,7 +94,7 @@ const char *        gvc_mixer_stream_get_description (GvcMixerStream *stream);
 const char *        gvc_mixer_stream_get_application_id (GvcMixerStream *stream);
 gboolean            gvc_mixer_stream_is_event_stream (GvcMixerStream *stream);
 gboolean            gvc_mixer_stream_is_virtual      (GvcMixerStream *stream);
-gint                gvc_mixer_stream_get_card_index  (GvcMixerStream *stream);
+guint               gvc_mixer_stream_get_card_index  (GvcMixerStream *stream);
 
 /* private */
 gboolean            gvc_mixer_stream_set_volume      (GvcMixerStream *stream,
@@ -128,7 +128,7 @@ gboolean            gvc_mixer_stream_set_port        (GvcMixerStream *stream,
 gboolean            gvc_mixer_stream_set_ports       (GvcMixerStream *stream,
                                                       GList          *ports);
 gboolean            gvc_mixer_stream_set_card_index  (GvcMixerStream *stream,
-                                                      gint            card_index);
+                                                      guint           card_index);
 
 G_END_DECLS
 

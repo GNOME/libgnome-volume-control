@@ -42,7 +42,7 @@ struct GvcMixerStreamPrivate
         pa_context    *pa_context;
         guint          id;
         guint          index;
-        gint           card_index;
+        guint          card_index;
         GvcChannelMap *channel_map;
         char          *name;
         char          *description;
@@ -609,7 +609,7 @@ gvc_mixer_stream_set_ports (GvcMixerStream *stream,
         return TRUE;
 }
 
-gint
+guint
 gvc_mixer_stream_get_card_index (GvcMixerStream *stream)
 {
         g_return_val_if_fail (GVC_IS_MIXER_STREAM (stream), PA_INVALID_INDEX);
@@ -618,7 +618,7 @@ gvc_mixer_stream_get_card_index (GvcMixerStream *stream)
 
 gboolean
 gvc_mixer_stream_set_card_index (GvcMixerStream *stream,
-                                 gint            card_index)
+                                 guint           card_index)
 {
         g_return_val_if_fail (GVC_IS_MIXER_STREAM (stream), FALSE);
 
