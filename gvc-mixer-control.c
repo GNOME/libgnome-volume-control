@@ -235,7 +235,7 @@ gvc_mixer_control_lookup_device_from_stream (GvcMixerControl *control,
 
         for (d = devices; d != NULL; d = d->next) {
                 GvcMixerUIDevice *device = d->data;
-                gint stream_id = G_MAXINT;
+                guint stream_id = G_MAXUINT;
 
                 g_object_get (G_OBJECT (device),
                              "stream-id", &stream_id,
@@ -618,23 +618,23 @@ gvc_mixer_control_change_output (GvcMixerControl *control,
 
         /* Finally if we are not on the correct stream, swap over. */
         if (stream != default_stream) {
-                GvcMixerUIDevice* output;
+                GvcMixerUIDevice* device;
 
                 g_debug ("Attempting to swap over to stream %s ",
                          gvc_mixer_stream_get_description (stream));
                 if (gvc_mixer_control_set_default_sink (control, stream)) {
-                        output = gvc_mixer_control_lookup_device_from_stream (control, stream);
+                        device = gvc_mixer_control_lookup_device_from_stream (control, stream);
                         g_signal_emit (G_OBJECT (control),
                                        signals[ACTIVE_OUTPUT_UPDATE],
                                        0,
-                                       gvc_mixer_ui_device_get_id (output));
+                                       gvc_mixer_ui_device_get_id (device));
                 } else {
                         /* If the move failed for some reason reset the UI. */
-                        output = gvc_mixer_control_lookup_device_from_stream (control, default_stream);
+                        device = gvc_mixer_control_lookup_device_from_stream (control, default_stream);
                         g_signal_emit (G_OBJECT (control),
                                        signals[ACTIVE_OUTPUT_UPDATE],
                                        0,
-                                       gvc_mixer_ui_device_get_id (output));
+                                       gvc_mixer_ui_device_get_id (device));
                 }
         }
 }
@@ -1210,7 +1210,7 @@ match_stream_with_devices (GvcMixerControl    *control,
                 gchar            *origin;
                 gchar            *description;
                 GvcMixerCard     *card;
-                gint              card_id;
+                guint             card_id;
 
                 device = d->data;
                 g_object_get (G_OBJECT (device),
@@ -1300,7 +1300,7 @@ sync_devices (GvcMixerControl *control,
 
                         for (d = devices; d != NULL; d = d->next) {
                                 GvcMixerCard *card;
-                                gint card_id;
+                                guint card_id;
 
                                 device = d->data;
 
@@ -1864,7 +1864,7 @@ static GList *
 determine_profiles_for_port (pa_card_port_info *port,
                              GList* card_profiles)
 {
-        gint i;
+        guint i;
         GList *supported_profiles = NULL;
         GList *p;
         for (i = 0; i < port->n_profiles; i++) {
@@ -2666,7 +2666,7 @@ remove_sink (GvcMixerControl *control,
                         devices = g_hash_table_get_values (control->priv->ui_outputs);
 
                         for (d = devices; d != NULL; d = d->next) {
-                                gint stream_id = GVC_MIXER_UI_DEVICE_INVALID;
+                                guint stream_id = GVC_MIXER_UI_DEVICE_INVALID;
                                 device = d->data;
                                 g_object_get (G_OBJECT (device),
                                              "stream-id", &stream_id,
@@ -2714,7 +2714,7 @@ remove_source (GvcMixerControl *control,
                         devices = g_hash_table_get_values (control->priv->ui_inputs);
 
                         for (d = devices; d != NULL; d = d->next) {
-                                gint stream_id = GVC_MIXER_UI_DEVICE_INVALID;
+                                guint stream_id = GVC_MIXER_UI_DEVICE_INVALID;
                                 device = d->data;
                                 g_object_get (G_OBJECT (device),
                                              "stream-id", &stream_id,
@@ -2830,6 +2830,8 @@ _pa_context_subscribe_cb (pa_context                  *context,
                 } else {
                         req_update_card (control, index);
                 }
+                break;
+        default:
                 break;
         }
 }
