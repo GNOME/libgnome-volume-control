@@ -1776,6 +1776,7 @@ update_source_output (GvcMixerControl             *control,
 {
         GvcMixerStream *stream;
         gboolean        is_new;
+        pa_volume_t     max_volume;
         const char     *name;
 
 #if 1
@@ -1802,10 +1803,14 @@ update_source_output (GvcMixerControl             *control,
         name = (const char *)g_hash_table_lookup (control->priv->clients,
                                                   GUINT_TO_POINTER (info->client));
 
+        max_volume = pa_cvolume_max (&info->volume);
+
         gvc_mixer_stream_set_name (stream, name);
         gvc_mixer_stream_set_description (stream, info->name);
         set_application_id_from_proplist (stream, info->proplist);
         set_is_event_stream_from_proplist (stream, info->proplist);
+        gvc_mixer_stream_set_volume (stream, (guint)max_volume);
+        gvc_mixer_stream_set_is_muted (stream, info->mute);
         set_icon_name_from_proplist (stream, info->proplist, "audio-input-microphone");
 
         if (is_new) {

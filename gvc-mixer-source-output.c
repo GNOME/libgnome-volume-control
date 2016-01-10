@@ -30,6 +30,8 @@
 #include <pulse/pulseaudio.h>
 
 #include "gvc-mixer-source-output.h"
+#include "gvc-mixer-stream-private.h"
+#include "gvc-channel-map-private.h"
 
 #define GVC_MIXER_SOURCE_OUTPUT_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GVC_TYPE_MIXER_SOURCE_OUTPUT, GvcMixerSourceOutputPrivate))
 
@@ -45,8 +47,33 @@ G_DEFINE_TYPE (GvcMixerSourceOutput, gvc_mixer_source_output, GVC_TYPE_MIXER_STR
 static gboolean
 gvc_mixer_source_output_push_volume (GvcMixerStream *stream, gpointer *op)
 {
-        /* FIXME: */
-        *op = NULL;
+        pa_operation        *o;
+        guint                index;
+        const GvcChannelMap *map;
+        pa_context          *context;
+        const pa_cvolume    *cv;
+
+        index = gvc_mixer_stream_get_index (stream);
+
+        map = gvc_mixer_stream_get_channel_map (stream);
+
+        cv = gvc_channel_map_get_cvolume(map);
+
+        context = gvc_mixer_stream_get_pa_context (stream);
+
+        o = pa_context_set_source_output_volume (context,
+                                                 index,
+                                                 cv,
+                                                 NULL,
+                                                 NULL);
+
+        if (o == NULL) {
+                g_warning ("pa_context_set_source_output_volume() failed");
+                return FALSE;
+        }
+
+        *op = o;
+
         return TRUE;
 }
 
@@ -54,7 +81,26 @@ static gboolean
 gvc_mixer_source_output_change_is_muted (GvcMixerStream *stream,
                                       gboolean        is_muted)
 {
-        /* FIXME: */
+        pa_operation *o;
+        guint         index;
+        pa_context   *context;
+
+        index = gvc_mixer_stream_get_index (stream);
+        context = gvc_mixer_stream_get_pa_context (stream);
+
+        o = pa_context_set_source_output_mute (context,
+                                               index,
+                                               is_muted,
+                                               NULL,
+                                               NULL);
+
+        if (o == NULL) {
+                g_warning ("pa_context_set_source_output_mute_by_index() failed");
+                return FALSE;
+        }
+
+        pa_operation_unref(o);
+
         return TRUE;
 }
 
