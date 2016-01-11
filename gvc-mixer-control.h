@@ -36,6 +36,14 @@ typedef enum
         GVC_STATE_FAILED
 } GvcMixerControlState;
 
+typedef enum
+{
+        GVC_HEADSET_PORT_CHOICE_NONE        = 0,
+        GVC_HEADSET_PORT_CHOICE_HEADPHONES  = 1 << 0,
+        GVC_HEADSET_PORT_CHOICE_HEADSET     = 1 << 1,
+        GVC_HEADSET_PORT_CHOICE_MIC         = 1 << 2
+} GvcHeadsetPortChoice;
+
 #define GVC_TYPE_MIXER_CONTROL         (gvc_mixer_control_get_type ())
 #define GVC_MIXER_CONTROL(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), GVC_TYPE_MIXER_CONTROL, GvcMixerControl))
 #define GVC_MIXER_CONTROL_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST((k), GVC_TYPE_MIXER_CONTROL, GvcMixerControlClass))
@@ -83,6 +91,11 @@ typedef struct
                                         guint            id);
         void (*input_removed)          (GvcMixerControl *control,
                                         guint            id);
+        void (*audio_device_selection_needed)
+                                       (GvcMixerControl      *control,
+                                        guint                 id,
+                                        gboolean              show_dialog,
+                                        GvcHeadsetPortChoice  choices);
 } GvcMixerControlClass;
 
 GType               gvc_mixer_control_get_type            (void);
@@ -130,6 +143,10 @@ GvcMixerStream*         gvc_mixer_control_get_stream_from_device            (Gvc
 gboolean                gvc_mixer_control_change_profile_on_selected_device (GvcMixerControl *control,
                                                                              GvcMixerUIDevice *device,
                                                                              const gchar* profile);
+
+void                    gvc_mixer_control_set_headset_port                  (GvcMixerControl      *control,
+                                                                             guint                 id,
+                                                                             GvcHeadsetPortChoice  choices);
 
 GvcMixerControlState gvc_mixer_control_get_state            (GvcMixerControl *control);
 
