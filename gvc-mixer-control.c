@@ -2122,7 +2122,6 @@ sink_info_cb (pa_context         *c,
 
         o = pa_context_set_sink_port_by_index (c, i->index, s, NULL, NULL);
         g_clear_pointer (&o, pa_operation_unref);
-        port_status_data_free (data);
 }
 
 static void
@@ -2158,7 +2157,6 @@ source_info_cb (pa_context           *c,
 
         o = pa_context_set_source_port_by_index(c, i->index, s, NULL, NULL);
         g_clear_pointer (&o, pa_operation_unref);
-        port_status_data_free (data);
 }
 
 static void
