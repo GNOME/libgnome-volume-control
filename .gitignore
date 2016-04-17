@@ -7,3 +7,4 @@ Makefile
 *.o
 *.gir
 *.typelib
+test-audio-device-selection
