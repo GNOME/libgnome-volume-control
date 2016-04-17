@@ -31,13 +31,13 @@ GVC_LIBS = `pkg-config --libs gtk+-3.0 libpulse libpulse-mainloop-glib alsa`
 all: test-audio-device-selection $(LIBGVC_SOURCES) tests-include/config.h
 
 .c.o:
-	$(CC) -c $(GVC_CFLAGS) -I. -Itests-include/ $< -o $@
+	$(CC) -g3 -ggdb -c $(GVC_CFLAGS) -I. -Itests-include/ $< -o $@
 
 C_SOURCES = $(filter %.c,$(LIBGVC_SOURCES))
 OBJECTS=$(C_SOURCES:.c=.o)
 
 test-audio-device-selection: $(OBJECTS) test-audio-device-selection.o
-	$(CC) $(GVC_LIBS) $(OBJECTS) test-audio-device-selection.o -o $@
+	$(CC) -g3 -ggdb $(GVC_LIBS) $(OBJECTS) test-audio-device-selection.o -o $@
 
 clean:
 	rm -f *.o test-audio-device-selection

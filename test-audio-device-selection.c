@@ -1,6 +1,10 @@
 
+#include <stdio.h>
+#include <locale.h>
 #include <pulse/pulseaudio.h>
 #include "gvc-mixer-control.h"
+
+#define MAX_ATTEMPTS 3
 
 typedef struct {
 	GvcHeadsetPortChoice choice;
@@ -14,18 +18,18 @@ static AudioSelectionChoice audio_selection_choices[] = {
 };
 
 static void
-audio_selection_needed (GvcMixerControl      *control,
+audio_selection_needed (GvcMixerControl      *volume,
 			guint                 id,
 			gboolean              show_dialog,
 			GvcHeadsetPortChoice  choices,
 			gpointer              user_data)
 {
 	char *args[G_N_ELEMENTS (audio_selection_choices) + 1];
-	char *choices_str;
 	guint i, n;
+	int response = -1;
 
 	if (!show_dialog) {
-		g_print ("Audio selection not needed anymore for id %d\n", id);
+		g_print ("--- Audio selection not needed anymore for id %d\n", id);
 		return;
 	}
 
@@ -36,16 +40,34 @@ audio_selection_needed (GvcMixerControl      *control,
 	}
 	args[n] = NULL;
 
-	choices_str = g_strjoinv (", ", args);
 	g_print ("+++ Audio selection needed for id %d\n", id);
-	g_print ("    Choices are: %s\n", choices_str);
-	g_free (choices_str);
+	g_print ("    Choices are: %s\n");
+	for (i = 0; args[i] != NULL; i++)
+		g_print ("    %d. %s\n", i + 1, args[i]);
+
+	for (i = 0; response < 0 && i < MAX_ATTEMPTS; i++) {
+		int res;
+
+		g_print ("What is your choice?\n");
+		if (scanf ("%d", &res) == 1 &&
+		    res > 0 &&
+		    res < g_strv_length (args)) {
+			response = res;
+			break;
+		}
+	}
+
+	gvc_mixer_control_set_headset_port (volume,
+					    id,
+					    audio_selection_choices[response - 1].choice);
 }
 
 int main (int argc, char **argv)
 {
 	GMainLoop *loop;
 	GvcMixerControl *volume;
+
+	setlocale (LC_ALL, "");
 
 	loop = g_main_loop_new (NULL, FALSE);
 
