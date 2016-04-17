@@ -2099,7 +2099,7 @@ sink_info_cb (pa_context         *c,
         int j;
         const char *s;
 
-        if (eol <= 0) {
+        if (eol != 0) {
                 port_status_data_free (data);
                 return;
         }
@@ -2135,7 +2135,7 @@ source_info_cb (pa_context           *c,
         int j;
         const char *s;
 
-        if (eol <= 0) {
+        if (eol != 0) {
                 port_status_data_free (data);
                 return;
         }
