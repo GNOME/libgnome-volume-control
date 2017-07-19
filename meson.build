@@ -21,7 +21,7 @@ libpulse_glib = dependency('libpulse-mainloop-glib')
 cdata = configuration_data()
 cdata.set_quoted('GETTEXT_PACKAGE', get_option('package-name'))
 cdata.set_quoted('PACKAGE_VERSION', get_option('package-version'))
-cdata.set10('HAVE_ALSA', alsa.found())
+cdata.set('HAVE_ALSA', alsa.found())
 
 config = configure_file(
   input: 'config.h.meson',
