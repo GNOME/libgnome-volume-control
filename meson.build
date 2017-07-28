@@ -141,6 +141,5 @@ endif
 libgvc_dep = declare_dependency(
   link_with: libgvc,
   include_directories: libgvc_inc,
-  dependencies: libgvc_deps,
-  sources: libgvc_gir_sources + libgvc_no_gir_sources
+  dependencies: libgvc_deps
 )
