@@ -12,7 +12,6 @@ gnome = import('gnome')
 pkglibdir = get_option('pkglibdir')
 pkgdatadir = get_option('pkgdatadir')
 
-alsa = dependency('alsa', required: false)
 gio = dependency('gio-2.0')
 gobject = dependency('gobject-2.0')
 libpulse = dependency('libpulse', version: '>= 2.0')
@@ -21,13 +20,6 @@ libpulse_glib = dependency('libpulse-mainloop-glib')
 cdata = configuration_data()
 cdata.set_quoted('GETTEXT_PACKAGE', get_option('package-name'))
 cdata.set_quoted('PACKAGE_VERSION', get_option('package-version'))
-cdata.set('HAVE_ALSA', alsa.found())
-
-config = configure_file(
-  input: 'config.h.meson',
-  output: 'config.h',
-  configuration: cdata
-)
 
 libgvc_inc = include_directories('.')
 
@@ -63,12 +55,17 @@ libgvc_no_gir_sources = [
 ]
 
 libgvc_deps = [
-  alsa,
   gio,
   gobject,
   libpulse,
   libpulse_glib
 ]
+
+enable_alsa = get_option('alsa')
+if enable_alsa
+  libgvc_deps += dependency('alsa')
+endif
+cdata.set('HAVE_ALSA', enable_alsa)
 
 static = get_option('static')
 with_introspection = get_option('with-introspection')
@@ -129,7 +126,7 @@ if with_introspection
   )
 endif
 
-if alsa.found()
+if enable_alsa
   executable('test-audio-device-selection',
     sources: 'test-audio-device-selection.c',
     link_with: libgvc,
@@ -142,4 +139,10 @@ libgvc_dep = declare_dependency(
   link_with: libgvc,
   include_directories: libgvc_inc,
   dependencies: libgvc_deps
+)
+
+config = configure_file(
+  input: 'config.h.meson',
+  output: 'config.h',
+  configuration: cdata
 )

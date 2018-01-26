@@ -22,6 +22,12 @@ option('pkgdatadir',
   description: 'The private directory the gir file will be installed into.'
 )
 
+option('alsa',
+  type: 'boolean',
+  value: true,
+  description: 'Build ALSA support.'
+)
+
 option('static',
   type: 'boolean',
   value: false,
