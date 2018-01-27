@@ -12,11 +12,6 @@ gnome = import('gnome')
 pkglibdir = get_option('pkglibdir')
 pkgdatadir = get_option('pkgdatadir')
 
-gio = dependency('gio-2.0')
-gobject = dependency('gobject-2.0')
-libpulse = dependency('libpulse', version: '>= 2.0')
-libpulse_glib = dependency('libpulse-mainloop-glib')
-
 cdata = configuration_data()
 cdata.set_quoted('GETTEXT_PACKAGE', get_option('package_name'))
 cdata.set_quoted('PACKAGE_VERSION', get_option('package_version'))
@@ -55,10 +50,10 @@ libgvc_no_gir_sources = [
 ]
 
 libgvc_deps = [
-  gio,
-  gobject,
-  libpulse,
-  libpulse_glib
+  dependency('gio-2.0'),
+  dependency('gobject-2.0'),
+  dependency('libpulse', version: '>= 2.0'),
+  dependency('libpulse-mainloop-glib')
 ]
 
 enable_alsa = get_option('alsa')
