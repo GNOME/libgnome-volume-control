@@ -14,8 +14,6 @@ cdata = configuration_data()
 cdata.set_quoted('GETTEXT_PACKAGE', get_option('package_name'))
 cdata.set_quoted('PACKAGE_VERSION', get_option('package_version'))
 
-libgvc_inc = include_directories('.')
-
 libgvc_gir_headers = [
   'gvc-channel-map.h',
   'gvc-mixer-card.h',
@@ -78,7 +76,6 @@ endif
 if enable_static
   libgvc_static = static_library('gvc',
     sources: libgvc_gir_sources + libgvc_no_gir_sources,
-    include_directories: libgvc_inc,
     dependencies: libgvc_deps,
     c_args: c_args
   )
@@ -91,7 +88,6 @@ else
 
   libgvc_shared = shared_library('gvc',
     sources: libgvc_gir_sources + libgvc_no_gir_sources,
-    include_directories: libgvc_inc,
     dependencies: libgvc_deps,
     c_args: c_args,
     install_rpath: pkgdatadir,
@@ -128,7 +124,7 @@ endif
 
 libgvc_dep = declare_dependency(
   link_with: libgvc,
-  include_directories: libgvc_inc,
+  include_directories: include_directories('.'),
   dependencies: libgvc_deps
 )
 
