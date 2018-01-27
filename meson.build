@@ -3,9 +3,7 @@ project('gvc', 'c',
   default_options: ['static=true']
 )
 
-if not meson.is_subproject()
-  error('This project is only intended to be used as a subproject!')
-endif
+assert(meson.is_subproject(), 'This project is only intended to be used as a subproject!')
 
 gnome = import('gnome')
 
@@ -68,9 +66,8 @@ cdata.set('HAVE_ALSA', enable_alsa)
 enable_static = get_option('static')
 enable_introspection = get_option('introspection')
 
-if enable_static and enable_introspection
-  error('Currently meson requires a shared library for building girs.')
-endif
+assert(not enable_static or not enable_introspection, 'Currently meson requires a shared library for building girs.')
+assert(enable_static or pkglibdir != '', 'Installing shared library, but pkglibdir is unset!')
 
 c_args = ['-DG_LOG_DOMAIN="Gvc"']
 
@@ -106,11 +103,7 @@ else
 endif
 
 if enable_introspection
-  if pkgdatadir == ''
-    error('Installing introspection, but pkgdatadir is unset!')
-  elif (pkglibdir == '')
-    error('Installing introspection, but pkglibdir is unset!')
-  endif
+  assert(pkgdatadir != '', 'Installing introspection, but pkgdatadir is unset!')
 
   libgvc_gir = gnome.generate_gir(libgvc,
     sources: libgvc_gir_sources + libgvc_gir_headers,
