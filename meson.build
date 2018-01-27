@@ -18,8 +18,8 @@ libpulse = dependency('libpulse', version: '>= 2.0')
 libpulse_glib = dependency('libpulse-mainloop-glib')
 
 cdata = configuration_data()
-cdata.set_quoted('GETTEXT_PACKAGE', get_option('package-name'))
-cdata.set_quoted('PACKAGE_VERSION', get_option('package-version'))
+cdata.set_quoted('GETTEXT_PACKAGE', get_option('package_name'))
+cdata.set_quoted('PACKAGE_VERSION', get_option('package_version'))
 
 libgvc_inc = include_directories('.')
 
@@ -67,20 +67,20 @@ if enable_alsa
 endif
 cdata.set('HAVE_ALSA', enable_alsa)
 
-static = get_option('static')
-with_introspection = get_option('with-introspection')
+enable_static = get_option('static')
+enable_introspection = get_option('introspection')
 
-if static and with_introspection
+if enable_static and enable_introspection
   error('Currently meson requires a shared library for building girs.')
 endif
 
 c_args = ['-DG_LOG_DOMAIN="Gvc"']
 
-if with_introspection
+if enable_introspection
   c_args += '-DWITH_INTROSPECTION'
 endif
 
-if static
+if enable_static
   libgvc_static = static_library('gvc',
     sources: libgvc_gir_sources + libgvc_no_gir_sources,
     include_directories: libgvc_inc,
@@ -107,7 +107,7 @@ else
   libgvc = libgvc_shared
 endif
 
-if with_introspection
+if enable_introspection
   if pkgdatadir == ''
     error('Installing introspection, but pkgdatadir is unset!')
   elif (pkglibdir == '')
