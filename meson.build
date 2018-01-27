@@ -18,27 +18,30 @@ cdata.set_quoted('PACKAGE_VERSION', get_option('package_version'))
 
 libgvc_inc = include_directories('.')
 
-libgvc_gir_sources = [
-  'gvc-mixer-card.h',
-  'gvc-mixer-card.c',
-  'gvc-mixer-stream.h',
-  'gvc-mixer-stream.c',
+libgvc_gir_headers = [
   'gvc-channel-map.h',
-  'gvc-channel-map.c',
-  'gvc-mixer-ui-device.h',
-  'gvc-mixer-ui-device.c',
-  'gvc-mixer-sink.h',
-  'gvc-mixer-sink.c',
-  'gvc-mixer-source.h',
-  'gvc-mixer-source.c',
-  'gvc-mixer-sink-input.h',
-  'gvc-mixer-sink-input.c',
-  'gvc-mixer-source-output.h',
-  'gvc-mixer-source-output.c',
-  'gvc-mixer-event-role.h',
-  'gvc-mixer-event-role.c',
+  'gvc-mixer-card.h',
   'gvc-mixer-control.h',
-  'gvc-mixer-control.c'
+  'gvc-mixer-event-role.h',
+  'gvc-mixer-sink.h',
+  'gvc-mixer-sink-input.h',
+  'gvc-mixer-source.h',
+  'gvc-mixer-source-output.h',
+  'gvc-mixer-stream.h',
+  'gvc-mixer-ui-device.h'
+]
+
+libgvc_gir_sources = [
+  'gvc-channel-map.c',
+  'gvc-mixer-card.c',
+  'gvc-mixer-control.c',
+  'gvc-mixer-event-role.c',
+  'gvc-mixer-sink.c',
+  'gvc-mixer-sink-input.c',
+  'gvc-mixer-source.c',
+  'gvc-mixer-source-output.c',
+  'gvc-mixer-stream.c',
+  'gvc-mixer-ui-device.c'
 ]
 
 libgvc_no_gir_sources = [
@@ -110,7 +113,7 @@ if enable_introspection
   endif
 
   libgvc_gir = gnome.generate_gir(libgvc,
-    sources: libgvc_gir_sources,
+    sources: libgvc_gir_sources + libgvc_gir_headers,
     nsversion: '1.0',
     namespace: 'Gvc',
     includes: ['Gio-2.0', 'GObject-2.0'],
