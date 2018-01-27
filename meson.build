@@ -128,8 +128,7 @@ libgvc_dep = declare_dependency(
   dependencies: libgvc_deps
 )
 
-config = configure_file(
-  input: 'config.h.meson',
+configure_file(
   output: 'config.h',
   configuration: cdata
 )
