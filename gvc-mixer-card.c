@@ -529,7 +529,8 @@ gvc_mixer_card_new (pa_context *context,
 }
 
 static void
-free_profile (GvcMixerCardProfile *p)
+free_profile (GvcMixerCardProfile *p,
+              gpointer             user_data)
 {
         g_free (p->profile);
         g_free (p->human_profile);
