@@ -564,8 +564,7 @@ gvc_mixer_card_finalize (GObject *object)
         g_free (mixer_card->priv->human_profile);
         mixer_card->priv->human_profile = NULL;
 
-        g_list_foreach (mixer_card->priv->profiles, (GFunc) free_profile, NULL);
-        g_list_free (mixer_card->priv->profiles);
+        g_list_free_full (mixer_card->priv->profiles, (GDestroyNotify) free_profile);
         mixer_card->priv->profiles = NULL;
 
         g_list_free_full (mixer_card->priv->ports, (GDestroyNotify) free_port);
