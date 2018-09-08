@@ -1038,8 +1038,7 @@ gvc_mixer_stream_finalize (GObject *object)
         g_free (mixer_stream->priv->human_port);
         mixer_stream->priv->human_port = NULL;
 
-        g_list_foreach (mixer_stream->priv->ports, (GFunc) free_port, NULL);
-        g_list_free (mixer_stream->priv->ports);
+        g_list_free_full (mixer_stream->priv->ports, (GDestroyNotify) free_port);
         mixer_stream->priv->ports = NULL;
 
        if (mixer_stream->priv->change_volume_op) {
