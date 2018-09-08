@@ -110,6 +110,13 @@ dup_port (GvcMixerStreamPort *p)
 
 G_DEFINE_BOXED_TYPE (GvcMixerStreamPort, gvc_mixer_stream_port, dup_port, free_port)
 
+static void
+list_free_port (GvcMixerStreamPort *p,
+                gpointer            user_data)
+{
+        free_port (p);
+}
+
 static guint32
 get_next_stream_serial (void)
 {
@@ -1038,7 +1045,7 @@ gvc_mixer_stream_finalize (GObject *object)
         g_free (mixer_stream->priv->human_port);
         mixer_stream->priv->human_port = NULL;
 
-        g_list_foreach (mixer_stream->priv->ports, (GFunc) free_port, NULL);
+        g_list_foreach (mixer_stream->priv->ports, (GFunc) list_free_port, NULL);
         g_list_free (mixer_stream->priv->ports);
         mixer_stream->priv->ports = NULL;
 
