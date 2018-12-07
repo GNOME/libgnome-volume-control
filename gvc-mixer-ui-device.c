@@ -129,29 +129,29 @@ gvc_mixer_ui_device_set_property  (GObject      *object,
         case PROP_DESC_LINE_1:
                 g_free (self->priv->first_line_desc);
                 self->priv->first_line_desc = g_value_dup_string (value);
-                g_debug ("gvc-mixer-output-set-property - 1st line: %s\n",
+                g_debug ("gvc-mixer-output-set-property - 1st line: %s",
                          self->priv->first_line_desc);
                 break;
         case PROP_DESC_LINE_2:
                 g_free (self->priv->second_line_desc);
                 self->priv->second_line_desc = g_value_dup_string (value);
-                g_debug ("gvc-mixer-output-set-property - 2nd line: %s\n",
+                g_debug ("gvc-mixer-output-set-property - 2nd line: %s",
                          self->priv->second_line_desc);
                 break;
         case PROP_CARD:
                 self->priv->card = g_value_get_pointer (value);
-                g_debug ("gvc-mixer-output-set-property - card: %p\n",
+                g_debug ("gvc-mixer-output-set-property - card: %p",
                          self->priv->card);
                 break;
         case PROP_PORT_NAME:
                 g_free (self->priv->port_name);
                 self->priv->port_name = g_value_dup_string (value);
-                g_debug ("gvc-mixer-output-set-property - card port name: %s\n",
+                g_debug ("gvc-mixer-output-set-property - card port name: %s",
                          self->priv->port_name);
                 break;
         case PROP_STREAM_ID:
                 self->priv->stream_id = g_value_get_uint (value);
-                g_debug ("gvc-mixer-output-set-property - sink/source id: %i\n",
+                g_debug ("gvc-mixer-output-set-property - sink/source id: %i",
                          self->priv->stream_id);
                 break;
         case PROP_UI_DEVICE_TYPE:
@@ -159,7 +159,7 @@ gvc_mixer_ui_device_set_property  (GObject      *object,
                 break;
         case PROP_PORT_AVAILABLE:
                 self->priv->port_available = g_value_get_boolean (value);
-                g_debug ("gvc-mixer-output-set-property - port available %i, value passed in %i \n",
+                g_debug ("gvc-mixer-output-set-property - port available %i, value passed in %i",
                          self->priv->port_available, g_value_get_boolean (value));
                 break;
         case PROP_ICON_NAME:
