@@ -220,6 +220,13 @@ _pa_context_set_card_profile_by_index_cb (pa_context                       *cont
         card->priv->profile_op = NULL;
 }
 
+/**
+ * gvc_mixer_card_change_profile:
+ * @card:
+ * @profile: (allow-none):
+ *
+ * Returns:
+ */
 gboolean
 gvc_mixer_card_change_profile (GvcMixerCard *card,
                                const char *profile)

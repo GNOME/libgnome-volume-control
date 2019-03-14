@@ -518,7 +518,7 @@ gvc_mixer_control_get_stream_from_device (GvcMixerControl *control,
  * gvc_mixer_control_change_profile_on_selected_device:
  * @control:
  * @device:
- * @profile: Can be null if any profile present on this port is okay
+ * @profile: (allow-none): Can be null if any profile present on this port is okay
  *
  * Returns: This method will attempt to swap the profile on the card of
  * the device with given profile name.  If successfull it will set the
