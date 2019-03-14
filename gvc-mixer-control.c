@@ -235,6 +235,9 @@ gvc_mixer_control_lookup_device_from_stream (GvcMixerControl *control,
         const GList             *ports;
         GvcMixerUIDevice        *ret;
 
+        g_return_val_if_fail (GVC_IS_MIXER_CONTROL (control), NULL);
+        g_return_val_if_fail (GVC_IS_MIXER_STREAM (stream), NULL);
+
         if (GVC_IS_MIXER_SOURCE (stream))
                devices = g_hash_table_get_values (control->priv->ui_inputs);
         else
@@ -534,6 +537,9 @@ gvc_mixer_control_change_profile_on_selected_device (GvcMixerControl  *control,
         GvcMixerCardProfile *current_profile;
         GvcMixerCard        *card;
 
+        g_return_val_if_fail (GVC_IS_MIXER_CONTROL (control), FALSE);
+        g_return_val_if_fail (GVC_IS_MIXER_UI_DEVICE (device), FALSE);
+
         g_object_get (G_OBJECT (device), "card", &card, NULL);
         current_profile = gvc_mixer_card_get_profile (card);
 
@@ -587,6 +593,9 @@ gvc_mixer_control_change_output (GvcMixerControl *control,
         GvcMixerStream           *default_stream;
         const GvcMixerStreamPort *active_port;
         const gchar              *output_port;
+
+        g_return_if_fail (GVC_IS_MIXER_CONTROL (control));
+        g_return_if_fail (GVC_IS_MIXER_UI_DEVICE (output));
 
         g_debug ("control change output");
 
@@ -676,6 +685,9 @@ gvc_mixer_control_change_input (GvcMixerControl *control,
         GvcMixerStream           *default_stream;
         const GvcMixerStreamPort *active_port;
         const gchar              *input_port;
+
+        g_return_if_fail (GVC_IS_MIXER_CONTROL (control));
+        g_return_if_fail (GVC_IS_MIXER_UI_DEVICE (input));
 
         stream = gvc_mixer_control_get_stream_from_device (control, input);
         if (stream == NULL) {
@@ -908,7 +920,7 @@ dec_outstanding (GvcMixerControl *control)
 GvcMixerControlState
 gvc_mixer_control_get_state (GvcMixerControl *control)
 {
-        g_return_val_if_fail (GVC_IS_MIXER_CONTROL (control), FALSE);
+        g_return_val_if_fail (GVC_IS_MIXER_CONTROL (control), 0);
 
         return control->priv->state;
 }
@@ -2184,6 +2196,8 @@ gvc_mixer_control_set_headset_port (GvcMixerControl      *control,
                                     guint                 id,
                                     GvcHeadsetPortChoice  choice)
 {
+        g_return_if_fail (GVC_IS_MIXER_CONTROL (control));
+
 #ifdef HAVE_ALSA
         switch (choice) {
         case GVC_HEADSET_PORT_CHOICE_HEADPHONES:
@@ -3730,11 +3744,13 @@ gvc_mixer_control_new (const char *name)
 gdouble
 gvc_mixer_control_get_vol_max_norm (GvcMixerControl *control)
 {
+	g_return_val_if_fail (GVC_IS_MIXER_CONTROL (control), 0);
 	return (gdouble) PA_VOLUME_NORM;
 }
 
 gdouble
 gvc_mixer_control_get_vol_max_amplified (GvcMixerControl *control)
 {
+	g_return_val_if_fail (GVC_IS_MIXER_CONTROL (control), 0);
 	return (gdouble) PA_VOLUME_UI_MAX;
 }
