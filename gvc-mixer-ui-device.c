@@ -447,7 +447,7 @@ gvc_mixer_ui_device_set_profiles (GvcMixerUIDevice *device,
 
 /**
  * gvc_mixer_ui_device_get_best_profile:
- * @selected: The selected profile or its canonical name or %NULL for any profile
+ * @selected: (allow-none): The selected profile or its canonical name or %NULL for any profile
  * @current: The currently selected profile
  *
  * Returns: (transfer none): a profile name, valid as long as the UI device profiles are.
