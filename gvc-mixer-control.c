@@ -3744,13 +3744,11 @@ gvc_mixer_control_new (const char *name)
 gdouble
 gvc_mixer_control_get_vol_max_norm (GvcMixerControl *control)
 {
-	g_return_val_if_fail (GVC_IS_MIXER_CONTROL (control), 0);
 	return (gdouble) PA_VOLUME_NORM;
 }
 
 gdouble
 gvc_mixer_control_get_vol_max_amplified (GvcMixerControl *control)
 {
-	g_return_val_if_fail (GVC_IS_MIXER_CONTROL (control), 0);
 	return (gdouble) PA_VOLUME_UI_MAX;
 }
