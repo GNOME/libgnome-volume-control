@@ -1452,6 +1452,21 @@ set_icon_name_from_proplist (GvcMixerStream *stream,
         gvc_mixer_stream_set_icon_name (stream, t);
 }
 
+static GvcMixerStreamState
+translate_pa_state (pa_sink_state_t state) {
+        switch (state) {
+        case PA_SINK_RUNNING:
+                return GVC_STREAM_STATE_RUNNING;
+        case PA_SINK_IDLE:
+                return GVC_STREAM_STATE_IDLE;
+        case PA_SINK_SUSPENDED:
+                return GVC_STREAM_STATE_SUSPENDED;
+        case PA_SINK_INVALID_STATE:
+        default:
+                return GVC_STREAM_STATE_INVALID;
+        }
+}
+
 /*
  * Called when anything changes with a sink.
  */
@@ -1521,6 +1536,7 @@ update_sink (GvcMixerControl    *control,
         gvc_mixer_stream_set_is_muted (stream, info->mute);
         gvc_mixer_stream_set_can_decibel (stream, !!(info->flags & PA_SINK_DECIBEL_VOLUME));
         gvc_mixer_stream_set_base_volume (stream, (guint32) info->base_volume);
+        gvc_mixer_stream_set_state (stream, translate_pa_state (info->state));
 
         /* Messy I know but to set the port everytime regardless of whether it has changed will cost us a
          * port change notify signal which causes the frontend to resync.
