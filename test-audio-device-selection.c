@@ -51,7 +51,7 @@ audio_selection_needed (GvcMixerControl      *volume,
 		g_print ("What is your choice?\n");
 		if (scanf ("%d", &res) == 1 &&
 		    res > 0 &&
-		    res < g_strv_length (args)) {
+		    res < (int) g_strv_length (args)) {
 			response = res;
 			break;
 		}
