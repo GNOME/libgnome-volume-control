@@ -1461,7 +1461,9 @@ translate_pa_state (pa_sink_state_t state) {
                 return GVC_STREAM_STATE_IDLE;
         case PA_SINK_SUSPENDED:
                 return GVC_STREAM_STATE_SUSPENDED;
+        case PA_SINK_INIT:
         case PA_SINK_INVALID_STATE:
+        case PA_SINK_UNLINKED:
         default:
                 return GVC_STREAM_STATE_INVALID;
         }
@@ -2228,6 +2230,7 @@ gvc_mixer_control_set_headset_port (GvcMixerControl      *control,
                 gvc_mixer_control_set_port_status_for_headset (control, id, "analog-output-speaker", TRUE);
                 gvc_mixer_control_set_port_status_for_headset (control, id, "analog-input-headphone-mic", FALSE);
                 break;
+        case GVC_HEADSET_PORT_CHOICE_NONE:
         default:
                 g_assert_not_reached ();
         }
