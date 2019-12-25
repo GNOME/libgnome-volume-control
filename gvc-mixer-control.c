@@ -2096,7 +2096,7 @@ create_ui_device_from_card (GvcMixerControl *control,
 #ifdef HAVE_ALSA
 typedef struct {
         char *port_name_to_set;
-        int headset_card;
+        guint32 headset_card;
 } PortStatusData;
 
 static void
@@ -2124,7 +2124,7 @@ sink_info_cb (pa_context         *c,
 {
         PortStatusData *data = userdata;
         pa_operation *o;
-        int j;
+        guint j;
         const char *s;
 
         if (eol != 0) {
@@ -2160,7 +2160,7 @@ source_info_cb (pa_context           *c,
 {
         PortStatusData *data = userdata;
         pa_operation *o;
-        int j;
+        guint j;
         const char *s;
 
         if (eol != 0) {
