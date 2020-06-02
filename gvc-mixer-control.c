@@ -2283,18 +2283,10 @@ typedef struct {
 } headset_ports;
 
 /*
-   TODO: Check if we still need this with the changed PA port names
-
    In PulseAudio without ucm, ports will show up with the following names:
    Headphones - analog-output-headphones
    Headset mic - analog-input-headset-mic (was: analog-input-microphone-headset)
    Jack in mic-in mode - analog-input-headphone-mic (was: analog-input-microphone)
-
-   In PulseAudio with ucm, the ports name depends on the ucm, with the current
-   ucm2, the ports will show up with the following names:
-   Headphones - [Out] Headphone
-   Headset mic - [In] Headset
-   Jack in mic-in mode - [In] Mic2
 
    However, since regular mics also show up as analog-input-microphone,
    we need to check for certain controls on alsa mixer level too, to know
@@ -2312,10 +2304,16 @@ typedef struct {
      this case, unless we already need to do this for the mic-in mode.
 
    From the PA_PROCOTOL_VERSION=34, The device_port structure adds 2 members
-   available_group and type, with the help of these 2 members, we could
+   availability_group and type, with the help of these 2 members, we could
    consolidate the port checking and port setting for non-ucm and with-ucm
    cases.
 */
+
+#define HEADSET_PORT_SET(dst, src) \
+        do { \
+                if (!(dst) || (dst)->priority < (src)->priority) \
+                        dst = src; \
+        } while (0)
 
 #define GET_PORT_NAME(x) (x ? g_strdup (x->name) : NULL)
 
@@ -2343,21 +2341,16 @@ get_headset_ports (GvcMixerControl    *control,
                                 h->internalspk = p;
                 } else {
 #if (PA_PROTOCOL_VERSION >= 34)
-                        if (p->available_group && strcmp (p->available_group, "Headphone Mic") == 0) {
-                                if (p->type == PA_DEVICE_PORT_TYPE_HEADPHONES)
-                                        h->headphones = p;
-                                else if (p->type == PA_DEVICE_PORT_TYPE_HEADSET)
-                                        h->headsetmic = p;
-                                else if (p->type == PA_DEVICE_PORT_TYPE_MIC)
-                                        h->headphonemic = p;
+                        /* in the first loop, set only headphones */
+                        /* the microphone ports are assigned in the second loop */
+                        if (p->type == PA_DEVICE_PORT_TYPE_HEADPHONES) {
+                                if (p->availability_group)
+                                        HEADSET_PORT_SET (h->headphones, p);
                         } else if (p->type == PA_DEVICE_PORT_TYPE_SPEAKER) {
-                                if (strcmp (p->name, "analog-output-speaker") == 0 ||
-                                    strcmp (p->name, "[Out] Speaker") == 0 )
-                                        h->internalspk = p;
+                                HEADSET_PORT_SET (h->internalspk, p);
                         } else if (p->type == PA_DEVICE_PORT_TYPE_MIC) {
-                                if (strcmp (p->name, "analog-input-internal-mic") == 0 ||
-                                    strcmp (p->name, "[In] Mic1") == 0 )
-                                        h->internalmic = p;
+                                if (!p->availability_group)
+                                        HEADSET_PORT_SET (h->internalmic, p);
                         }
 #else
                         g_warning_once ("libgnome-volume-control running against PulseAudio %u, "
@@ -2367,6 +2360,23 @@ get_headset_ports (GvcMixerControl    *control,
 #endif
                 }
         }
+
+#if (PA_PROTOCOL_VERSION >= 34)
+        if (h->headphones && (control->priv->server_protocol_version >= 34)) {
+                for (i = 0; i < c->n_ports; i++) {
+                        pa_card_port_info *p = c->ports[i];
+                        if (g_strcmp0(h->headphones->availability_group, p->availability_group))
+                                continue;
+                        if (p->direction != PA_DIRECTION_INPUT)
+                                continue;
+                        if (p->type == PA_DEVICE_PORT_TYPE_HEADSET)
+                                HEADSET_PORT_SET (h->headsetmic, p);
+                        else if (p->type == PA_DEVICE_PORT_TYPE_MIC)
+                                HEADSET_PORT_SET (h->headphonemic, p);
+                }
+        }
+#endif
+
         return h;
 }
 
