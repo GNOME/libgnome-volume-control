@@ -557,6 +557,11 @@ gvc_mixer_ui_device_get_active_profile (GvcMixerUIDevice* device)
         }
 
         profile = gvc_mixer_card_get_profile (device->priv->card);
+        if (profile == NULL) {
+                g_debug ("Device has no assigned profile");
+                return NULL;
+        }
+
         return gvc_mixer_ui_device_get_matching_profile (device, profile->profile);
 }
 
