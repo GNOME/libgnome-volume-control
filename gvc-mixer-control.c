@@ -2871,7 +2871,13 @@ update_event_role_stream (GvcMixerControl                  *control,
                                               GUINT_TO_POINTER (control->priv->event_sink_input_id));
         }
 
-        max_volume = pa_cvolume_max (&info->volume);
+        /* 0 channels here means there is no valid volume in
+         * pa_ext_stream_restore_info() and in the saved stream entry of
+         * module-stream-restore in PulseAudio. */
+        if (info->volume.channels == 0)
+                max_volume = PA_VOLUME_NORM;
+        else
+                max_volume = pa_cvolume_max (&info->volume);
 
         gvc_mixer_stream_set_name (stream, _("System Sounds"));
         gvc_mixer_stream_set_icon_name (stream, "audio-x-generic");
