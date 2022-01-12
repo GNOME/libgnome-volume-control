@@ -2590,7 +2590,6 @@ update_card (GvcMixerControl      *control,
                 }
                 card = gvc_mixer_card_new (control->priv->pa_context,
                                            info->index);
-                gvc_mixer_card_set_profiles (card, profile_list);
 
                 for (i = 0; i < info->n_ports; i++) {
                         GvcMixerCardPort *port;
@@ -2604,6 +2603,8 @@ update_card (GvcMixerControl      *control,
                         port->profiles = determine_profiles_for_port (info->ports[i], profile_list);
                         port_list = g_list_prepend (port_list, port);
                 }
+
+                gvc_mixer_card_set_profiles (card, profile_list);
                 gvc_mixer_card_set_ports (card, port_list);
                 is_new = TRUE;
         }
