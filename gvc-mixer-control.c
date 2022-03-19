@@ -1234,7 +1234,7 @@ match_stream_with_devices (GvcMixerControl    *control,
 
         for (d = devices; d != NULL; d = d->next) {
                 GvcMixerUIDevice *device;
-                gint              device_stream_id;
+                guint             device_stream_id;
                 gchar            *device_port_name;
                 gchar            *origin;
                 gchar            *description;
