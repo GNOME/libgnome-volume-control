@@ -1276,7 +1276,7 @@ match_stream_with_devices (GvcMixerControl    *control,
                                          stream_id);
 
                                 g_object_set (G_OBJECT (device),
-                                              "stream-id", (gint)stream_id,
+                                              "stream-id", stream_id,
                                               NULL);
                                 in_possession = TRUE;
                         }
@@ -1365,7 +1365,7 @@ sync_devices (GvcMixerControl *control,
                         }
 
                         g_object_set (G_OBJECT (device),
-                                      "stream-id", (gint)gvc_mixer_stream_get_id (stream),
+                                      "stream-id", gvc_mixer_stream_get_id (stream),
                                       "description", gvc_mixer_stream_get_description (stream),
                                       "origin", "", /*Leave it empty for these special cases*/
                                       "port-name", NULL,
@@ -1375,7 +1375,7 @@ sync_devices (GvcMixerControl *control,
                         GObject *object;
 
                         object = g_object_new (GVC_TYPE_MIXER_UI_DEVICE,
-                                               "stream-id", (gint)gvc_mixer_stream_get_id (stream),
+                                               "stream-id", gvc_mixer_stream_get_id (stream),
                                                "description", gvc_mixer_stream_get_description (stream),
                                                "origin", "", /* Leave it empty for these special cases */
                                                "port-name", NULL,
