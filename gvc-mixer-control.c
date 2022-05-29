@@ -54,8 +54,10 @@
 
 enum {
         PROP_0,
-        PROP_NAME
+        PROP_NAME,
+        N_PROPS
 };
+static GParamSpec *obj_props[N_PROPS] = { NULL, };
 
 struct GvcMixerControlPrivate
 {
@@ -3638,7 +3640,7 @@ gvc_mixer_control_set_property (GObject       *object,
         case PROP_NAME:
                 g_free (self->priv->name);
                 self->priv->name = g_value_dup_string (value);
-                g_object_notify (G_OBJECT (self), "name");
+                g_object_notify_by_pspec (G_OBJECT (self), obj_props[PROP_NAME]);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -3694,13 +3696,12 @@ gvc_mixer_control_class_init (GvcMixerControlClass *klass)
         object_class->set_property = gvc_mixer_control_set_property;
         object_class->get_property = gvc_mixer_control_get_property;
 
-        g_object_class_install_property (object_class,
-                                         PROP_NAME,
-                                         g_param_spec_string ("name",
-                                                              "Name",
-                                                              "Name to display for this mixer control",
-                                                              NULL,
-                                                              G_PARAM_READWRITE|G_PARAM_CONSTRUCT_ONLY));
+        obj_props[PROP_NAME] = g_param_spec_string ("name",
+                                                    "Name",
+                                                    "Name to display for this mixer control",
+                                                    NULL,
+                                                    G_PARAM_READWRITE|G_PARAM_CONSTRUCT_ONLY|G_PARAM_STATIC_STRINGS);
+        g_object_class_install_properties (object_class, N_PROPS, obj_props);
 
         signals [STATE_CHANGED] =
                 g_signal_new ("state-changed",
