@@ -3707,120 +3707,105 @@ gvc_mixer_control_class_init (GvcMixerControlClass *klass)
                               G_TYPE_FROM_CLASS (klass),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GvcMixerControlClass, state_changed),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__UINT,
+                              NULL, NULL, NULL,
                               G_TYPE_NONE, 1, G_TYPE_UINT);
         signals [STREAM_ADDED] =
                 g_signal_new ("stream-added",
                               G_TYPE_FROM_CLASS (klass),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GvcMixerControlClass, stream_added),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__UINT,
+                              NULL, NULL, NULL,
                               G_TYPE_NONE, 1, G_TYPE_UINT);
         signals [STREAM_REMOVED] =
                 g_signal_new ("stream-removed",
                               G_TYPE_FROM_CLASS (klass),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GvcMixerControlClass, stream_removed),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__UINT,
+                              NULL, NULL, NULL,
                               G_TYPE_NONE, 1, G_TYPE_UINT);
         signals [STREAM_CHANGED] =
                 g_signal_new ("stream-changed",
                               G_TYPE_FROM_CLASS (klass),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GvcMixerControlClass, stream_changed),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__UINT,
+                              NULL, NULL, NULL,
                               G_TYPE_NONE, 1, G_TYPE_UINT);
         signals [AUDIO_DEVICE_SELECTION_NEEDED] =
                 g_signal_new ("audio-device-selection-needed",
                               G_TYPE_FROM_CLASS (klass),
                               G_SIGNAL_RUN_LAST,
                               0,
-                              NULL, NULL,
-                              g_cclosure_marshal_generic,
+                              NULL, NULL, NULL,
                               G_TYPE_NONE, 3, G_TYPE_UINT, G_TYPE_BOOLEAN, G_TYPE_UINT);
         signals [CARD_ADDED] =
                 g_signal_new ("card-added",
                               G_TYPE_FROM_CLASS (klass),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GvcMixerControlClass, card_added),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__UINT,
+                              NULL, NULL, NULL,
                               G_TYPE_NONE, 1, G_TYPE_UINT);
         signals [CARD_REMOVED] =
                 g_signal_new ("card-removed",
                               G_TYPE_FROM_CLASS (klass),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GvcMixerControlClass, card_removed),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__UINT,
+                              NULL, NULL, NULL,
                               G_TYPE_NONE, 1, G_TYPE_UINT);
         signals [DEFAULT_SINK_CHANGED] =
                 g_signal_new ("default-sink-changed",
                               G_TYPE_FROM_CLASS (klass),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GvcMixerControlClass, default_sink_changed),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__UINT,
+                              NULL, NULL, NULL,
                               G_TYPE_NONE, 1, G_TYPE_UINT);
         signals [DEFAULT_SOURCE_CHANGED] =
                 g_signal_new ("default-source-changed",
                               G_TYPE_FROM_CLASS (klass),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GvcMixerControlClass, default_source_changed),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__UINT,
+                              NULL, NULL, NULL,
                               G_TYPE_NONE, 1, G_TYPE_UINT);
         signals [ACTIVE_OUTPUT_UPDATE] =
                 g_signal_new ("active-output-update",
                               G_TYPE_FROM_CLASS (klass),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GvcMixerControlClass, active_output_update),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__UINT,
+                              NULL, NULL, NULL,
                               G_TYPE_NONE, 1, G_TYPE_UINT);
         signals [ACTIVE_INPUT_UPDATE] =
                 g_signal_new ("active-input-update",
                               G_TYPE_FROM_CLASS (klass),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GvcMixerControlClass, active_input_update),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__UINT,
+                              NULL, NULL, NULL,
                               G_TYPE_NONE, 1, G_TYPE_UINT);
         signals [OUTPUT_ADDED] =
                 g_signal_new ("output-added",
                               G_TYPE_FROM_CLASS (klass),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GvcMixerControlClass, output_added),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__UINT,
+                              NULL, NULL, NULL,
                               G_TYPE_NONE, 1, G_TYPE_UINT);
         signals [INPUT_ADDED] =
                 g_signal_new ("input-added",
                               G_TYPE_FROM_CLASS (klass),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GvcMixerControlClass, input_added),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__UINT,
+                              NULL, NULL, NULL,
                               G_TYPE_NONE, 1, G_TYPE_UINT);
         signals [OUTPUT_REMOVED] =
                 g_signal_new ("output-removed",
                               G_TYPE_FROM_CLASS (klass),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GvcMixerControlClass, output_removed),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__UINT,
+                              NULL, NULL, NULL,
                               G_TYPE_NONE, 1, G_TYPE_UINT);
         signals [INPUT_REMOVED] =
                 g_signal_new ("input-removed",
                               G_TYPE_FROM_CLASS (klass),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (GvcMixerControlClass, input_removed),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__UINT,
+                              NULL, NULL, NULL,
                               G_TYPE_NONE, 1, G_TYPE_UINT);
 }
 
