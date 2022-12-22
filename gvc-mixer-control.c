@@ -1806,7 +1806,7 @@ update_sink_input (GvcMixerControl          *control,
 
         set_application_id_from_proplist (stream, info->proplist);
         set_is_event_stream_from_proplist (stream, info->proplist);
-        set_icon_name_from_proplist (stream, info->proplist, "applications-multimedia");
+        set_icon_name_from_proplist (stream, info->proplist, "application-x-executable");
         gvc_mixer_stream_set_volume (stream, (guint)max_volume);
         gvc_mixer_stream_set_is_muted (stream, info->mute);
         gvc_mixer_stream_set_is_virtual (stream, info->client == PA_INVALID_INDEX);
@@ -2874,7 +2874,7 @@ update_event_role_stream (GvcMixerControl                  *control,
         max_volume = pa_cvolume_max (&info->volume);
 
         gvc_mixer_stream_set_name (stream, _("System Sounds"));
-        gvc_mixer_stream_set_icon_name (stream, "emblem-system-symbolic");
+        gvc_mixer_stream_set_icon_name (stream, "audio-x-generic");
         gvc_mixer_stream_set_volume (stream, (guint)max_volume);
         gvc_mixer_stream_set_is_muted (stream, info->mute);
 
