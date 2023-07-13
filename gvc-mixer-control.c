@@ -3119,6 +3119,9 @@ remove_card (GvcMixerControl *control,
 
                 g_object_get (G_OBJECT (device), "card", &card, NULL);
 
+                if (card == NULL)
+                        continue;
+
                 if (gvc_mixer_card_get_index (card) == index) {
                         g_signal_emit (G_OBJECT (control),
                                        signals[gvc_mixer_ui_device_is_output (device) ? OUTPUT_REMOVED : INPUT_REMOVED],
@@ -3434,15 +3437,22 @@ gvc_mixer_new_pa_context (GvcMixerControl *self)
 }
 
 static void
-remove_all_streams (GvcMixerControl *control, GHashTable *hash_table)
+remove_all_items (GvcMixerControl *control,
+                  GHashTable *hash_table,
+                  void (*remove_item)(GvcMixerControl *control, guint index))
 {
         GHashTableIter iter;
         gpointer key, value;
 
         g_hash_table_iter_init (&iter, hash_table);
         while (g_hash_table_iter_next (&iter, &key, &value)) {
-                remove_stream (control, value);
-                g_hash_table_iter_remove (&iter);
+                if (remove_item) {
+                        remove_item (control, GPOINTER_TO_UINT (key));
+                        g_hash_table_remove (hash_table, key);
+                        g_hash_table_iter_init (&iter, hash_table);
+                } else {
+                        g_hash_table_iter_remove (&iter);
+                }
         }
 }
 
@@ -3450,10 +3460,21 @@ static gboolean
 idle_reconnect (gpointer data)
 {
         GvcMixerControl *control = GVC_MIXER_CONTROL (data);
-        GHashTableIter iter;
-        gpointer key, value;
 
         g_return_val_if_fail (control, FALSE);
+
+        g_debug ("Reconnect: clean up all objects");
+
+        remove_all_items (control, control->priv->sinks, remove_sink);
+        remove_all_items (control, control->priv->sources, remove_source);
+        remove_all_items (control, control->priv->sink_inputs, remove_sink_input);
+        remove_all_items (control, control->priv->source_outputs, remove_source_output);
+        remove_all_items (control, control->priv->cards, remove_card);
+        remove_all_items (control, control->priv->ui_inputs, NULL);
+        remove_all_items (control, control->priv->ui_outputs, NULL);
+        remove_all_items (control, control->priv->clients, remove_client);
+
+        g_debug ("Reconnect: make new connection");
 
         if (control->priv->pa_context) {
                 pa_context_unref (control->priv->pa_context);
@@ -3461,15 +3482,6 @@ idle_reconnect (gpointer data)
                 control->priv->server_protocol_version = 0;
                 gvc_mixer_new_pa_context (control);
         }
-
-        remove_all_streams (control, control->priv->sinks);
-        remove_all_streams (control, control->priv->sources);
-        remove_all_streams (control, control->priv->sink_inputs);
-        remove_all_streams (control, control->priv->source_outputs);
-
-        g_hash_table_iter_init (&iter, control->priv->clients);
-        while (g_hash_table_iter_next (&iter, &key, &value))
-                g_hash_table_iter_remove (&iter);
 
         gvc_mixer_control_open (control); /* cannot fail */
 
