@@ -1322,7 +1322,6 @@ sync_devices (GvcMixerControl *control,
         const GList *stream_ports;
         const GList *n = NULL;
         gboolean     is_output = !GVC_IS_MIXER_SOURCE (stream);
-        gint         stream_port_count = 0;
 
         stream_ports = gvc_mixer_stream_get_ports (stream);
 
@@ -1402,7 +1401,6 @@ sync_devices (GvcMixerControl *control,
 
                 GvcMixerStreamPort *stream_port;
                 stream_port = n->data;
-                stream_port_count ++;
 
                 if (match_stream_with_devices (control, stream_port, stream))
                         continue;
