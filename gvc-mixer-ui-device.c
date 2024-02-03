@@ -158,6 +158,8 @@ gvc_mixer_ui_device_set_property  (GObject      *object,
                 break;
         case PROP_UI_DEVICE_TYPE:
                 self->priv->type = (GvcMixerUIDeviceDirection) g_value_get_uint (value);
+                g_debug ("gvc-mixer-output-set-property - device type: %s",
+                         self->priv->type == UIDeviceInput ? "input" : "output");
                 break;
         case PROP_PORT_AVAILABLE:
                 self->priv->port_available = g_value_get_boolean (value);
@@ -166,6 +168,8 @@ gvc_mixer_ui_device_set_property  (GObject      *object,
                 break;
         case PROP_ICON_NAME:
                 gvc_mixer_ui_device_set_icon_name (self, g_value_get_string (value));
+                g_debug ("gvc-mixer-output-set-property - icon name: %s",
+                         self->priv->icon_name);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
