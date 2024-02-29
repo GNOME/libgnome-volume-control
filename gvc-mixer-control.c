@@ -614,7 +614,6 @@ gvc_mixer_control_change_output (GvcMixerControl *control,
                 return;
         }
 
-        /* Handle a network sink as a portless or cardless device */
         if (!gvc_mixer_ui_device_has_ports (output)) {
                 g_debug ("Did we try to move to a software/bluetooth sink ?");
                 if (gvc_mixer_control_set_default_sink (control, stream)) {
@@ -704,7 +703,6 @@ gvc_mixer_control_change_input (GvcMixerControl *control,
                 return;
         }
 
-        /* Handle a network sink as a portless/cardless device */
         if (!gvc_mixer_ui_device_has_ports (input)) {
                 g_debug ("Did we try to move to a software/bluetooth source ?");
                 if (! gvc_mixer_control_set_default_source (control, stream)) {
@@ -1308,8 +1306,6 @@ match_stream_with_devices (GvcMixerControl    *control,
  * only then can we match the new hdmi sink with its corresponding device.
  *
  * Firstly it checks to see if the incoming stream has no ports.
- * - If a stream has no ports but has a valid card ID (bluetooth), it will attempt
- *   to match the device with the stream using the card id.
  * - If a stream has no ports and no valid card id, it goes ahead and makes a new
  *   device (software/network devices are only detectable at the sink/source level)
  * If the stream has ports it will match each port against the stream using match_stream_with_devices().
@@ -1329,68 +1325,22 @@ sync_devices (GvcMixerControl *control,
 
         if (stream_ports == NULL) {
                 GvcMixerUIDevice *device;
-                /* Bluetooth, no ports but a valid card */
-                if (gvc_mixer_stream_get_card_index (stream) != PA_INVALID_INDEX) {
-                        GList *devices, *d;
-                        gboolean in_possession = FALSE;
+                GObject *object;
 
-                        devices = g_hash_table_get_values (is_output ? control->priv->ui_outputs : control->priv->ui_inputs);
+                object = g_object_new (GVC_TYPE_MIXER_UI_DEVICE,
+                                       "stream-id", gvc_mixer_stream_get_id (stream),
+                                       "description", gvc_mixer_stream_get_description (stream),
+                                       "origin", "", /* Leave it empty for these special cases */
+                                       "port-name", NULL,
+                                       "port-available", TRUE,
+                                       "icon-name", gvc_mixer_stream_get_icon_name (stream),
+                                        NULL);
+                device = GVC_MIXER_UI_DEVICE (object);
 
-                        for (d = devices; d != NULL; d = d->next) {
-                                GvcMixerCard *card;
-                                guint card_id;
+                g_hash_table_insert (is_output ? control->priv->ui_outputs : control->priv->ui_inputs,
+                                     GUINT_TO_POINTER (gvc_mixer_ui_device_get_id (device)),
+                                     g_object_ref (device));
 
-                                device = d->data;
-
-                                g_object_get (G_OBJECT (device),
-                                             "card", &card,
-                                              NULL);
-                                card_id = gvc_mixer_card_get_index (card);
-                                g_debug ("sync devices, device description - '%s', device card id - %i, stream description - %s, stream card id - %i",
-                                         gvc_mixer_ui_device_get_description (device),
-                                         card_id,
-                                         gvc_mixer_stream_get_description (stream),
-                                         gvc_mixer_stream_get_card_index (stream));
-                                if (card_id == gvc_mixer_stream_get_card_index (stream)) {
-                                        in_possession = TRUE;
-                                        break;
-                                }
-                        }
-                        g_list_free (devices);
-
-                        if (!in_possession) {
-                                g_warning ("Couldn't match the portless stream (with card) - '%s' is it an input ? -> %i, streams card id -> %i",
-                                           gvc_mixer_stream_get_description (stream),
-                                           GVC_IS_MIXER_SOURCE (stream),
-                                           gvc_mixer_stream_get_card_index (stream));
-                                return;
-                        }
-
-                        g_object_set (G_OBJECT (device),
-                                      "stream-id", gvc_mixer_stream_get_id (stream),
-                                      "description", gvc_mixer_stream_get_description (stream),
-                                      "origin", "", /*Leave it empty for these special cases*/
-                                      "port-name", NULL,
-                                      "port-available", TRUE,
-                                      NULL);
-                } else { /* Network sink/source has no ports and no card. */
-                        GObject *object;
-
-                        object = g_object_new (GVC_TYPE_MIXER_UI_DEVICE,
-                                               "stream-id", gvc_mixer_stream_get_id (stream),
-                                               "description", gvc_mixer_stream_get_description (stream),
-                                               "origin", "", /* Leave it empty for these special cases */
-                                               "port-name", NULL,
-                                               "port-available", TRUE,
-                                               "icon-name", gvc_mixer_stream_get_icon_name (stream),
-                                                NULL);
-                        device = GVC_MIXER_UI_DEVICE (object);
-
-                        g_hash_table_insert (is_output ? control->priv->ui_outputs : control->priv->ui_inputs,
-                                             GUINT_TO_POINTER (gvc_mixer_ui_device_get_id (device)),
-                                             g_object_ref (device));
-
-                }
                 g_signal_emit (G_OBJECT (control),
                                signals[is_output ? OUTPUT_ADDED : INPUT_ADDED],
                                0,
@@ -1972,9 +1922,9 @@ is_card_port_an_output (GvcMixerCardPort* port)
  * This method will create a ui device for the given port.
  */
 static void
-create_ui_device_from_port (GvcMixerControl* control,
-                            GvcMixerCardPort* port,
-                            GvcMixerCard* card)
+update_ui_device_on_port_added (GvcMixerControl  *control,
+                                GvcMixerCardPort *port,
+                                GvcMixerCard     *card)
 {
         GvcMixerUIDeviceDirection  direction;
         GObject                   *object;
@@ -2008,23 +1958,18 @@ create_ui_device_from_port (GvcMixerControl* control,
                                gvc_mixer_ui_device_get_id (uidevice));
         }
 
-        g_debug ("create_ui_device_from_port, direction %u, description '%s', origin '%s', port available %i", 
+        g_debug ("update_ui_device_on_port_added, direction %u, description '%s', origin '%s', port available %i", 
                  direction,
                  port->human_port,
                  gvc_mixer_card_get_name (card),
                  available);
 }
 
-/*
- * This method will match up GvcMixerCardPorts with existing devices.
- * A match is achieved if the device's card-id and the port's card-id are the same
- * && the device's port-name and the card-port's port member are the same.
- */
 static void
-update_ui_device_from_port (GvcMixerControl   *control,
-                            GvcMixerCardPort  *card_port,
-                            pa_card_port_info *new_port_info,
-                            GvcMixerCard      *card)
+update_ui_device_on_port_changed (GvcMixerControl   *control,
+                                  GvcMixerCardPort  *card_port,
+                                  pa_card_port_info *new_port_info,
+                                  GvcMixerCard      *card)
 {
         GList                   *d;
         GList                   *devices;
@@ -2081,48 +2026,62 @@ update_ui_device_from_port (GvcMixerControl   *control,
 }
 
 static void
-create_ui_device_from_card (GvcMixerControl *control,
-                            GvcMixerCard    *card)
+maybe_remove_ui_device (GvcMixerControl  *control,
+                        GvcMixerUIDevice *device)
 {
-        GObject          *object;
-        GvcMixerUIDevice *in;
-        GvcMixerUIDevice *out;
-        const GList      *profiles;
+        /* We add UIDevices for ports or for streams, so remove them if the device now
+         * has neither.
+         */
+        if (gvc_mixer_ui_device_get_stream_id (device) == GVC_MIXER_UI_DEVICE_INVALID &&
+            !gvc_mixer_ui_device_has_ports (device)) {
+                gboolean is_output = gvc_mixer_ui_device_is_output (device);
 
-        /* For now just create two devices and presume this device is multi directional
-         * Ensure to remove both on card removal (available to false by default) */
-        profiles = gvc_mixer_card_get_profiles (card);
+                g_debug ("Removing UIDevice %s",
+                         gvc_mixer_ui_device_get_description (device));
 
-        g_debug ("Portless card just registered - %i", gvc_mixer_card_get_index (card));
+                g_hash_table_remove (is_output ? control->priv->ui_outputs : control->priv->ui_inputs,
+                                     GUINT_TO_POINTER (gvc_mixer_ui_device_get_id (device)));
+        }
+}
 
-        object = g_object_new (GVC_TYPE_MIXER_UI_DEVICE,
-                               "type", UIDeviceInput,
-                               "description", gvc_mixer_card_get_name (card),
-                               "origin", "", /* Leave it empty for these special cases */
-                               "port-name", NULL,
-                               "port-available", FALSE,
-                               "card", card,
-                               NULL);
-        in = GVC_MIXER_UI_DEVICE (object);
-        gvc_mixer_ui_device_set_profiles (in, profiles);
+static void
+update_ui_device_on_port_removed (GvcMixerControl  *control,
+                                  GvcMixerCardPort *card_port,
+                                  GvcMixerCard     *card)
+{
+        GList *d;
+        GList *devices;
+        gboolean is_output = is_card_port_an_output (card_port);
 
-        g_hash_table_insert (control->priv->ui_inputs,
-                             GUINT_TO_POINTER (gvc_mixer_ui_device_get_id (in)),
-                             g_object_ref (in));
-        object = g_object_new (GVC_TYPE_MIXER_UI_DEVICE,
-                               "type", UIDeviceOutput,
-                               "description", gvc_mixer_card_get_name (card),
-                               "origin", "", /* Leave it empty for these special cases */
-                               "port-name", NULL,
-                               "port-available", FALSE,
-                               "card", card,
-                               NULL);
-        out = GVC_MIXER_UI_DEVICE (object);
-        gvc_mixer_ui_device_set_profiles (out, profiles);
+        devices  = g_hash_table_get_values (is_output ? control->priv->ui_outputs : control->priv->ui_inputs);
+        for (d = devices; d != NULL; d = d->next) {
+                GvcMixerUIDevice *device = d->data;
+                GvcMixerCard *device_card;
+                gchar *device_port_name;
 
-        g_hash_table_insert (control->priv->ui_outputs,
-                             GUINT_TO_POINTER (gvc_mixer_ui_device_get_id (out)),
-                             g_object_ref (out));
+                g_object_get (G_OBJECT (device),
+                             "card", &device_card,
+                             "port-name", &device_port_name,
+                              NULL);
+
+                if (g_strcmp0 (card_port->port, device_port_name) == 0 && device_card == card) {
+                        g_object_set (G_OBJECT (device),
+                                      "card", NULL,
+                                      "port-name", NULL,
+                                       NULL);
+
+                        g_signal_emit (G_OBJECT (control),
+                                       signals[is_output ? OUTPUT_REMOVED : INPUT_REMOVED],
+                                       0,
+                                       gvc_mixer_ui_device_get_id (device));
+
+                        maybe_remove_ui_device (control, device);
+                }
+
+               g_free (device_port_name);
+        }
+
+        g_list_free (devices);
 }
 
 #ifdef HAVE_ALSA
@@ -2549,8 +2508,6 @@ out:
  * This is done by the following:
  *
  * - gvc_mixer_card and gvc_mixer_card_ports are created and relevant setters are called.
- * - First it checks to see if it's a portless card. Bluetooth devices are portless AFAIHS.
- *        If so it creates two devices, an input and an output.
  * - If it's a 'normal' card with ports it will create a new ui-device or
  *   synchronise port availability with the existing device cached for that port on this card. */
 
@@ -2558,11 +2515,11 @@ static void
 update_card (GvcMixerControl      *control,
              const pa_card_info   *info)
 {
-        const GList  *card_ports = NULL;
         const GList  *m = NULL;
         GvcMixerCard *card;
         gboolean      is_new = FALSE;
         GList *profile_list = NULL;
+        GList *old_ports;
 #if 1
         guint i;
         const char *key;
@@ -2611,26 +2568,6 @@ update_card (GvcMixerControl      *control,
         }
 
         gvc_mixer_card_set_profiles (card, profile_list);
-
-        if (is_new) {
-                GList *port_list = NULL;
-
-                for (i = 0; i < info->n_ports; i++) {
-                        GvcMixerCardPort *port;
-                        port = g_new0 (GvcMixerCardPort, 1);
-                        port->port = g_strdup (info->ports[i]->name);
-                        port->human_port = g_strdup (info->ports[i]->description);
-                        port->priority = info->ports[i]->priority;
-                        port->available = info->ports[i]->available;
-                        port->direction = info->ports[i]->direction;
-                        port->icon_name = g_strdup (pa_proplist_gets (info->ports[i]->proplist, "device.icon_name"));
-                        port->profiles = determine_profiles_for_port (info->ports[i], profile_list);
-                        port_list = g_list_prepend (port_list, port);
-                }
-
-                gvc_mixer_card_set_ports (card, port_list);
-        }
-
         gvc_mixer_card_set_name (card, pa_proplist_gets (info->proplist, "device.description"));
         gvc_mixer_card_set_icon_name (card, pa_proplist_gets (info->proplist, "device.icon_name"));
         gvc_mixer_card_set_profile (card, info->active_profile->name);
@@ -2641,23 +2578,52 @@ update_card (GvcMixerControl      *control,
                                      card);
         }
 
-        card_ports = gvc_mixer_card_get_ports (card);
+        old_ports = g_list_copy ((GList *)gvc_mixer_card_get_ports (card));
+        for (m = old_ports; m; m = m->next) {
+                GvcMixerCardPort *card_port = m->data;
+                gboolean found = FALSE;
 
-        if (card_ports == NULL && is_new) {
-                g_debug ("Portless card just registered - %s", gvc_mixer_card_get_name (card));
-                create_ui_device_from_card (control, card);
+                for (i = 0; i < info->n_ports; i++) {
+                        pa_card_port_info *port = info->ports[i];
+
+                        if (g_strcmp0 (card_port->port, port->name) == 0)
+                                found = TRUE;
+                }
+
+                if (!found) {
+                        update_ui_device_on_port_removed (control, card_port, card);
+                        gvc_mixer_card_remove_port (card, card_port);
+                }
         }
+        g_clear_pointer (&old_ports, g_list_free);
 
-        for (m = card_ports; m != NULL; m = m->next) {
-                GvcMixerCardPort *card_port;
-                card_port = m->data;
-                if (is_new)
-                        create_ui_device_from_port (control, card_port, card);
-                else {
-                        for (i = 0; i < info->n_ports; i++) {
-                                if (g_strcmp0 (card_port->port, info->ports[i]->name) == 0)
-                                        update_ui_device_from_port (control, card_port, info->ports[i], card);
+        for (i = 0; i < info->n_ports; i++) {
+                pa_card_port_info *port = info->ports[i];
+                gboolean found = FALSE;
+
+                for (m = gvc_mixer_card_get_ports (card); m; m = m->next) {
+                        GvcMixerCardPort *card_port = m->data;
+
+                        if (g_strcmp0 (card_port->port, port->name) == 0) {
+                                found = TRUE;
+                                update_ui_device_on_port_changed (control, card_port, port, card);
                         }
+                }
+
+                if (!found) {
+                        GvcMixerCardPort *card_port;
+
+                        card_port = g_new0 (GvcMixerCardPort, 1);
+                        card_port->port = g_strdup (port->name);
+                        card_port->human_port = g_strdup (port->description);
+                        card_port->priority = port->priority;
+                        card_port->available = port->available;
+                        card_port->direction = port->direction;
+                        card_port->icon_name = g_strdup (pa_proplist_gets (port->proplist, "device.icon_name"));
+                        card_port->profiles = determine_profiles_for_port (port, profile_list);
+
+                        gvc_mixer_card_add_port (card, card_port);
+                        update_ui_device_on_port_added (control, card_port, card);
                 }
         }
 

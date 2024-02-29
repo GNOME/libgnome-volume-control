@@ -385,6 +385,21 @@ gvc_mixer_card_set_ports (GvcMixerCard *card,
         return TRUE;
 }
 
+void
+gvc_mixer_card_add_port (GvcMixerCard     *card,
+                         GvcMixerCardPort *port)
+{
+        card->priv->ports = g_list_prepend (card->priv->ports, port);
+}
+
+void
+gvc_mixer_card_remove_port (GvcMixerCard     *card,
+                            GvcMixerCardPort *port)
+{
+        card->priv->ports = g_list_remove (card->priv->ports, port);
+        free_port (port);
+}
+
 static void
 gvc_mixer_card_set_property (GObject       *object,
                              guint          prop_id,
