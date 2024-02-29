@@ -179,6 +179,9 @@ gvc_mixer_card_set_profile (GvcMixerCard *card,
         g_return_val_if_fail (GVC_IS_MIXER_CARD (card), FALSE);
         g_return_val_if_fail (card->priv->profiles != NULL, FALSE);
 
+        if (g_strcmp0 (card->priv->profile, profile) == 0)
+                return TRUE;
+
         g_free (card->priv->profile);
         card->priv->profile = g_strdup (profile);
 
