@@ -438,6 +438,9 @@ gvc_mixer_ui_device_set_profiles (GvcMixerUIDevice *device,
 
         g_debug ("Set profiles for '%s'", gvc_mixer_ui_device_get_description(device));
 
+        g_clear_pointer (&device->priv->supported_profiles, g_list_free);
+        g_clear_pointer (&device->priv->profiles, g_list_free);
+
         if (in_profiles == NULL)
                 return;
 
