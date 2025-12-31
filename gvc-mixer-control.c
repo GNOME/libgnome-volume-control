@@ -1189,6 +1189,13 @@ remove_stream (GvcMixerControl *control,
         g_object_unref (stream);
 }
 
+/**
+ * add_stream: (skip)
+ * @control: The control to add the stream to
+ * @stream:(transfer full): The stream to add
+ *
+ * Add a stream to the hash table of all known streams
+ */
 static void
 add_stream (GvcMixerControl *control,
             GvcMixerStream  *stream)
