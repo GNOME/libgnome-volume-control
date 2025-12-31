@@ -1367,7 +1367,7 @@ sync_devices (GvcMixerControl *control,
 
                 g_hash_table_insert (is_output ? control->priv->ui_outputs : control->priv->ui_inputs,
                                      GUINT_TO_POINTER (gvc_mixer_ui_device_get_id (device)),
-                                     g_object_ref (device));
+                                     device);
 
                 g_signal_emit (G_OBJECT (control),
                                signals[is_output ? OUTPUT_ADDED : INPUT_ADDED],
