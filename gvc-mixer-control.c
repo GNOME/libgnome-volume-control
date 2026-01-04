@@ -1451,6 +1451,7 @@ update_sink (GvcMixerControl    *control,
         pa_volume_t     max_volume;
         GvcChannelMap   *map;
         char            map_buff[PA_CHANNEL_MAP_SNPRINT_MAX];
+        GList          *list = NULL;
 
         pa_channel_map_snprint (map_buff, PA_CHANNEL_MAP_SNPRINT_MAX, &info->channel_map);
 #if 1
@@ -1467,27 +1468,10 @@ update_sink (GvcMixerControl    *control,
                                       GUINT_TO_POINTER (info->index));
 
         if (stream == NULL) {
-                GList *list = NULL;
-                guint i;
-
                 map = gvc_channel_map_new_from_pa_channel_map (&info->channel_map);
                 stream = gvc_mixer_sink_new (control->priv->pa_context,
                                              info->index,
                                              map);
-
-                for (i = 0; i < info->n_ports; i++) {
-                        GvcMixerStreamPort *port;
-
-                        port = g_slice_new0 (GvcMixerStreamPort);
-                        port->port = g_strdup (info->ports[i]->name);
-                        port->human_port = g_strdup (info->ports[i]->description);
-                        port->priority = info->ports[i]->priority;
-                        port->available = info->ports[i]->available != PA_PORT_AVAILABLE_NO;
-
-                        list = g_list_prepend (list, port);
-                }
-                gvc_mixer_stream_set_ports (stream, list);
-
                 g_object_unref (map);
                 is_new = TRUE;
 
@@ -1496,6 +1480,19 @@ update_sink (GvcMixerControl    *control,
                 g_debug ("Ignoring event, volume changes are outstanding");
                 return;
         }
+
+        for (guint i = 0; i < info->n_ports; i++) {
+                GvcMixerStreamPort *port;
+
+                port = g_slice_new0 (GvcMixerStreamPort);
+                port->port = g_strdup (info->ports[i]->name);
+                port->human_port = g_strdup (info->ports[i]->description);
+                port->priority = info->ports[i]->priority;
+                port->available = info->ports[i]->available != PA_PORT_AVAILABLE_NO;
+
+                list = g_list_prepend (list, port);
+        }
+        gvc_mixer_stream_set_ports (stream, g_steal_pointer (&list));
 
         max_volume = pa_cvolume_max (&info->volume);
         gvc_mixer_stream_set_name (stream, info->name);
@@ -1584,6 +1581,7 @@ update_source (GvcMixerControl      *control,
         GvcMixerStream *stream;
         gboolean        is_new;
         pa_volume_t     max_volume;
+        GList          *list = NULL;
 
 #if 1
         g_debug ("Updating source: index=%u name='%s' description='%s'",
@@ -1602,26 +1600,12 @@ update_source (GvcMixerControl      *control,
         stream = g_hash_table_lookup (control->priv->sources,
                                       GUINT_TO_POINTER (info->index));
         if (stream == NULL) {
-                GList *list = NULL;
-                guint i;
                 GvcChannelMap *map;
 
                 map = gvc_channel_map_new_from_pa_channel_map (&info->channel_map);
                 stream = gvc_mixer_source_new (control->priv->pa_context,
                                                info->index,
                                                map);
-
-                for (i = 0; i < info->n_ports; i++) {
-                        GvcMixerStreamPort *port;
-
-                        port = g_slice_new0 (GvcMixerStreamPort);
-                        port->port = g_strdup (info->ports[i]->name);
-                        port->human_port = g_strdup (info->ports[i]->description);
-                        port->priority = info->ports[i]->priority;
-                        list = g_list_prepend (list, port);
-                }
-                gvc_mixer_stream_set_ports (stream, list);
-
                 g_object_unref (map);
                 is_new = TRUE;
         } else if (gvc_mixer_stream_is_running (stream)) {
@@ -1629,6 +1613,17 @@ update_source (GvcMixerControl      *control,
                 g_debug ("Ignoring event, volume changes are outstanding");
                 return;
         }
+
+        for (guint i = 0; i < info->n_ports; i++) {
+                GvcMixerStreamPort *port;
+
+                port = g_slice_new0 (GvcMixerStreamPort);
+                port->port = g_strdup (info->ports[i]->name);
+                port->human_port = g_strdup (info->ports[i]->description);
+                port->priority = info->ports[i]->priority;
+                list = g_list_prepend (list, port);
+        }
+        gvc_mixer_stream_set_ports (stream, list);
 
         max_volume = pa_cvolume_max (&info->volume);
 
