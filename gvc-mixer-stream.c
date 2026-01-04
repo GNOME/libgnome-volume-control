@@ -532,8 +532,6 @@ gvc_mixer_stream_get_port (GvcMixerStream *stream)
                 }
         }
 
-        g_assert_not_reached ();
-
         return NULL;
 }
 
