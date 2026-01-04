@@ -617,14 +617,7 @@ gvc_mixer_control_change_output (GvcMixerControl *control,
 
         if (!gvc_mixer_ui_device_has_ports (output)) {
                 g_debug ("Did we try to move to a software/bluetooth sink ?");
-                if (gvc_mixer_control_set_default_sink (control, stream)) {
-                        /* sink change was successful,  update the UI.*/
-                        g_signal_emit (G_OBJECT (control),
-                                       signals[ACTIVE_OUTPUT_UPDATE],
-                                       0,
-                                       gvc_mixer_ui_device_get_id (output));
-                }
-                else {
+                if (!gvc_mixer_control_set_default_sink (control, stream)) {
                         g_warning ("Failed to set default sink with stream from output %s",
                                    gvc_mixer_ui_device_get_description (output));
                 }
