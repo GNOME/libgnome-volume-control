@@ -1507,6 +1507,10 @@ update_sink (GvcMixerControl    *control,
         gvc_mixer_stream_set_base_volume (stream, (guint32) info->base_volume);
         gvc_mixer_stream_set_state (stream, translate_pa_state (info->state));
 
+        /* Sync devices as the port on the stream might have changed */
+        if (!is_new)
+                sync_devices (control, stream);
+
         /* Messy I know but to set the port everytime regardless of whether it has changed will cost us a
          * port change notify signal which causes the frontend to resync.
          * Only update the UI when something has changed. */
@@ -1637,6 +1641,10 @@ update_source (GvcMixerControl      *control,
         gvc_mixer_stream_set_can_decibel (stream, !!(info->flags & PA_SOURCE_DECIBEL_VOLUME));
         gvc_mixer_stream_set_base_volume (stream, (guint32) info->base_volume);
         g_debug ("update source");
+
+        /* Sync devices as the port on the stream might have changed */
+        if (!is_new)
+                sync_devices (control, stream);
 
         if (info->active_port != NULL) {
                 if (is_new)
