@@ -341,7 +341,6 @@ gboolean
 gvc_mixer_control_set_default_source (GvcMixerControl *control,
                                       GvcMixerStream  *stream)
 {
-        GvcMixerUIDevice* input;
         pa_operation *o;
 
         g_return_val_if_fail (GVC_IS_MIXER_CONTROL (control), FALSE);
@@ -372,13 +371,6 @@ gvc_mixer_control_set_default_source (GvcMixerControl *control,
         }
 
         pa_operation_unref (o);
-
-        /* source change successful, update the UI. */
-        input = gvc_mixer_control_lookup_device_from_stream (control, stream);
-        g_signal_emit (G_OBJECT (control),
-                       signals[ACTIVE_INPUT_UPDATE],
-                       0,
-                       gvc_mixer_ui_device_get_id (input));
 
         return TRUE;
 }
