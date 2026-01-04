@@ -1525,7 +1525,8 @@ update_sink (GvcMixerControl    *control,
                         if (active_port == NULL ||
                             g_strcmp0 (active_port->port, info->active_port->name) != 0) {
                                 g_debug ("update sink - apparently a port update");
-                                gvc_mixer_stream_set_port (stream, info->active_port->name);
+                                if (!gvc_mixer_stream_set_port (stream, info->active_port->name))
+                                        g_warning ("Port update to of %d '%s' failed", info->index, info->active_port->name);
                         }
                 }
         }
@@ -1654,7 +1655,8 @@ update_source (GvcMixerControl      *control,
                         if (active_port == NULL ||
                             g_strcmp0 (active_port->port, info->active_port->name) != 0) {
                                 g_debug ("update source - apparently a port update");
-                                gvc_mixer_stream_set_port (stream, info->active_port->name);
+                                if (!gvc_mixer_stream_set_port (stream, info->active_port->name))
+                                        g_warning ("Port update to of %d '%s' failed", info->index, info->active_port->name);
                         }
                 }
         }
