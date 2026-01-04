@@ -639,23 +639,11 @@ gvc_mixer_control_change_output (GvcMixerControl *control,
 
         /* Finally if we are not on the correct stream, swap over. */
         if (stream != default_stream) {
-                GvcMixerUIDevice* device;
-
                 g_debug ("Attempting to swap over to stream %s ",
                          gvc_mixer_stream_get_description (stream));
-                if (gvc_mixer_control_set_default_sink (control, stream)) {
-                        device = gvc_mixer_control_lookup_device_from_stream (control, stream);
-                        g_signal_emit (G_OBJECT (control),
-                                       signals[ACTIVE_OUTPUT_UPDATE],
-                                       0,
-                                       gvc_mixer_ui_device_get_id (device));
-                } else {
-                        /* If the move failed for some reason reset the UI. */
-                        device = gvc_mixer_control_lookup_device_from_stream (control, default_stream);
-                        g_signal_emit (G_OBJECT (control),
-                                       signals[ACTIVE_OUTPUT_UPDATE],
-                                       0,
-                                       gvc_mixer_ui_device_get_id (device));
+                if (!gvc_mixer_control_set_default_sink (control, stream)) {
+                        g_warning ("Failed to set default sink from output %s",
+                                   gvc_mixer_ui_device_get_description (output));
                 }
         }
 }
