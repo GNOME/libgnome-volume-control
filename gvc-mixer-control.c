@@ -1914,9 +1914,9 @@ determine_profiles_for_port (pa_card_port_info *port,
                                 supported_profiles = g_list_append (supported_profiles, prof);
                 }
         }
-        g_debug ("%i profiles supported on port %s",
+        g_debug ("%i profiles supported on port %s / %s",
                  g_list_length (supported_profiles),
-                 port->description);
+                 port->description, port->name);
         return g_list_sort (supported_profiles, (GCompareFunc) gvc_mixer_card_profile_compare);
 }
 
