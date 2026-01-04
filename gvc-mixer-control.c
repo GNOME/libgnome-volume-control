@@ -729,7 +729,10 @@ gvc_mixer_control_change_input (GvcMixerControl *control,
         if (stream != default_stream) {
                 g_debug ("change-input - attempting to swap over to stream %s",
                          gvc_mixer_stream_get_description (stream));
-                gvc_mixer_control_set_default_source (control, stream);
+                if (!gvc_mixer_control_set_default_source (control, stream)) {
+                        g_warning ("Failed to set default source from input %s",
+                                   gvc_mixer_ui_device_get_description (input));
+                }
         }
 }
 
