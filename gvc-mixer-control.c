@@ -532,7 +532,7 @@ gvc_mixer_control_get_stream_from_device (GvcMixerControl *control,
  * @profile: (allow-none): Can be %NULL if any profile present on this port is okay
  *
  * Returns: This method will attempt to swap the profile on the card of
- * the device with given profile name.  If successfull it will set the
+ * the device with given profile name.  If successful it will set the
  * preferred profile on that device so as we know the next time the user
  * moves to that device it should have this profile active.
  */
@@ -584,7 +584,7 @@ gvc_mixer_control_change_profile_on_selected_device (GvcMixerControl  *control,
  * - Firstly it queries the stream from the device.
  *   - It assumes that if the stream is null that it cannot be a bluetooth or network stream (they never show unless they have valid sinks and sources)
  *   In the scenario of a NULL stream on the device
- *        - It fetches the device's preferred profile or if NUll the profile with the highest priority on that device.
+ *        - It fetches the device's preferred profile or if NULL the profile with the highest priority on that device.
  *        - It then caches this device in control->priv->cached_desired_output_id so that when the update_sink triggered
  *          from when we attempt to change profile we will know exactly what device to highlight on that stream.
  *        - It attempts to swap the profile on the card from that device and returns.
@@ -675,7 +675,7 @@ gvc_mixer_control_change_output (GvcMixerControl *control,
  * - Firstly it queries the stream from the device.
  *   - It assumes that if the stream is null that it cannot be a bluetooth or network stream (they never show unless they have valid sinks and sources)
  *   In the scenario of a NULL stream on the device
- *        - It fetches the device's preferred profile or if NUll the profile with the highest priority on that device.
+ *        - It fetches the device's preferred profile or if NULL the profile with the highest priority on that device.
  *        - It then caches this device in control->priv->cached_desired_input_id so that when the update_source triggered
  *          from when we attempt to change profile we will know exactly what device to highlight on that stream.
  *        - It attempts to swap the profile on the card from that device and returns.
@@ -1542,7 +1542,7 @@ update_sink (GvcMixerControl    *control,
                                      GUINT_TO_POINTER (info->index),
                                      g_object_ref (stream));
                 add_stream (control, stream);
-                /* Always sink on a new stream to able to assign the right stream id
+                /* Always sync on a new stream to able to assign the right stream id
                  * to the appropriate outputs (multiple potential outputs per stream). */
                 sync_devices (control, stream);
         } else {
@@ -1971,7 +1971,7 @@ update_ui_device_on_port_added (GvcMixerControl  *control,
                                gvc_mixer_ui_device_get_id (uidevice));
         }
 
-        g_debug ("update_ui_device_on_port_added, direction %u, description '%s', origin '%s', port available %i", 
+        g_debug ("update_ui_device_on_port_added, direction %u, description '%s', origin '%s', port available %i",
                  direction,
                  port->human_port,
                  gvc_mixer_card_get_name (card),
