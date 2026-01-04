@@ -265,7 +265,7 @@ gvc_mixer_control_lookup_device_from_stream (GvcMixerControl *control,
 
                 if (is_network_stream &&
                     stream_id == gvc_mixer_stream_get_id (stream)) {
-                        g_debug ("lookup device from stream - %s - it is a network_stream ",
+                        g_debug ("lookup-device-from-stream - %s - it is a network_stream ",
                                  gvc_mixer_ui_device_get_description (device));
                         ret = device;
                         break;
@@ -289,7 +289,7 @@ gvc_mixer_control_lookup_device_from_stream (GvcMixerControl *control,
                 }
         }
 
-        g_debug ("gvc_mixer_control_lookup_device_from_stream - Could not find a device for stream '%s'",gvc_mixer_stream_get_description (stream));
+        g_debug ("lookup-device-from-stream - Could not find a device for stream '%s'", gvc_mixer_stream_get_description (stream));
 
         g_list_free (devices);
 
