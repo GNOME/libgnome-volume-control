@@ -1257,23 +1257,29 @@ match_stream_with_devices (GvcMixerControl    *control,
                                  stream_port->port,
                                  stream_card_id);
 
-                        if (stream_card_id == card_id &&
-                            g_strcmp0 (device_port_name, stream_port->port) == 0) {
-                                g_debug ("Match device with stream: We have a match with description: '%s', origin: '%s', cached already with device id %u, so set stream id to %i",
-                                         description,
-                                         origin,
-                                         gvc_mixer_ui_device_get_id (device),
-                                         stream_id);
+                        if (stream_card_id == card_id) {
+                                if (g_strcmp0 (device_port_name, stream_port->port) == 0) {
+                                        g_debug ("Match device with stream: We have a match with description: '%s', origin: '%s', cached already with device id %u, so set stream id to %i",
+                                                 description,
+                                                 origin,
+                                                 gvc_mixer_ui_device_get_id (device),
+                                                 stream_id);
 
-                                g_object_set (G_OBJECT (device),
-                                              "stream-id", stream_id,
-                                              NULL);
-                                in_possession = TRUE;
+                                        g_object_set (G_OBJECT (device),
+                                                      "stream-id", stream_id,
+                                                      NULL);
+                                        in_possession = TRUE;
+                                } else {
+                                        /* Other UI devices on that card that match the stream can't be valid */
+                                        if (device_stream_id == stream_id) {
+                                                g_object_set (G_OBJECT (device),
+                                                              "stream-id", GVC_MIXER_UI_DEVICE_INVALID,
+                                                              NULL);
+                                                g_debug ("Found another UI device for this stream: %d, resetting", stream_id);
+                                        }
+                                }
                         }
                 }
-
-                if (in_possession == TRUE)
-                        break;
         }
 
         return in_possession;
