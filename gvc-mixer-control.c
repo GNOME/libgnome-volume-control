@@ -289,7 +289,8 @@ gvc_mixer_control_lookup_device_from_stream (GvcMixerControl *control,
                 }
         }
 
-        g_debug ("lookup-device-from-stream - Could not find a device for stream '%s'", gvc_mixer_stream_get_description (stream));
+        if (!ret)
+                g_debug ("lookup-device-from-stream - Could not find a device for stream '%s'", gvc_mixer_stream_get_description (stream));
 
         g_list_free (devices);
 
