@@ -1235,7 +1235,7 @@ match_stream_with_devices (GvcMixerControl    *control,
                            GvcMixerStreamPort *stream_port,
                            GvcMixerStream     *stream)
 {
-        GList                   *devices, *d;
+        g_autoptr (GList)        devices = NULL;
         guint                    stream_card_id;
         guint                    stream_id;
         gboolean                 in_possession = FALSE;
@@ -1245,12 +1245,12 @@ match_stream_with_devices (GvcMixerControl    *control,
 
         devices  = g_hash_table_get_values (GVC_IS_MIXER_SOURCE (stream) ? control->priv->ui_inputs : control->priv->ui_outputs);
 
-        for (d = devices; d != NULL; d = d->next) {
+        for (GList *d = devices; d != NULL; d = d->next) {
                 GvcMixerUIDevice *device;
                 guint             device_stream_id;
-                gchar            *device_port_name;
-                gchar            *origin;
-                gchar            *description;
+                g_autofree gchar *device_port_name = NULL;
+                g_autofree gchar *origin = NULL;
+                g_autofree gchar *description = NULL;
                 GvcMixerCard     *card;
                 guint             card_id;
 
@@ -1295,15 +1295,10 @@ match_stream_with_devices (GvcMixerControl    *control,
                         }
                 }
 
-                g_free (device_port_name);
-                g_free (origin);
-                g_free (description);
-
                 if (in_possession == TRUE)
                         break;
         }
 
-        g_list_free (devices);
         return in_possession;
 }
 
