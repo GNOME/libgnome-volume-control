@@ -523,7 +523,11 @@ gvc_mixer_stream_get_port (GvcMixerStream *stream)
         GList *l;
 
         g_return_val_if_fail (GVC_IS_MIXER_STREAM (stream), NULL);
-        g_return_val_if_fail (stream->priv->ports != NULL, NULL);
+        if (stream->priv->ports == NULL) {
+                g_debug ("gvc_mixer_stream_get_port: stream %s has no ports yet",
+                         gvc_mixer_stream_get_name (stream));
+                return NULL;
+        }
 
         for (l = stream->priv->ports; l != NULL; l = l->next) {
                 GvcMixerStreamPort *p = l->data;
