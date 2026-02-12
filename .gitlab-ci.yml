@@ -1,9 +1,16 @@
-stages:
-- test
+include:
+  - project: "GNOME/citemplates"
+    file: "templates/default-rules.yml"
+  - component: "gitlab.gnome.org/GNOME/citemplates/gnomeos-basic-ci@master"
+    inputs:
+      meson-sourcedir: ".gitlab-ci"
+      # There are no tests atm
+      run-tests: "no"
 
 build-fedora:
   image: fedora:latest
   stage: test
+  needs: []
   before_script:
     - dnf install -y redhat-rpm-config gcc clang meson pulseaudio-libs-devel alsa-lib-devel gtk3-devel
   script:
